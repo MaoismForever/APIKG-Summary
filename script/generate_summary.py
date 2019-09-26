@@ -178,7 +178,7 @@ class Summary:
         :param number: 需要搜寻的类数
         :return:
         """
-        start_time = time.time()
+        # start_time = time.time()
         all_class_2_summary = {}
         class_id_2_method_ids = {}
         # class_ids = []
@@ -226,6 +226,7 @@ class Summary:
                 method_nums.append(self.sorted_method_and_sentence_id_dict[method_id])
             method_nums.sort()
             if len(method_nums) > 3:
+                class_name_1 = class_name + '.'
                 count_method = 0
                 for method_num in method_nums:
                     if count_method >= 3:
@@ -234,7 +235,7 @@ class Summary:
                     method_id = method_num_2_id[method_num]
                     method_node = self.graph_data.find_nodes_by_ids(method_id)
                     method_name = method_node[0]['properties']['qualified_name']
-                    method_name = method_name.split(class_name)[1]
+                    method_name = method_name.split(class_name_1)[1]
                     class_or_method_2_sentence = {method_name: {}}
                     class_or_method_2_sentence[method_name]['url'] = ''
                     self.create_class_or_method_2_sentence(method_id, method_name, class_or_method_2_sentence)
@@ -244,7 +245,7 @@ class Summary:
                     method_id = method_num_2_id[method_num]
                     method_node = self.graph_data.find_nodes_by_ids(method_id)
                     method_name = method_node[0]['properties']['qualified_name']
-                    method_name = method_name.split(class_name)[1]
+                    method_name = method_name.split(class_name_1)[1]
                     class_or_method_2_sentence = {method_name: {}}
                     class_or_method_2_sentence[method_name]['url'] = ''
                     self.create_class_or_method_2_sentence(method_id, method_name, class_or_method_2_sentence)
@@ -256,8 +257,8 @@ class Summary:
         #     class_summary = self.get_summary(query, class_name)
         #     all_class_2_summary[index] = class_summary
         #     index += 1
-        end_time = time.time()
-        print("time ", (end_time - start_time))
+        # end_time = time.time()
+        # print("time ", (end_time - start_time))
         return all_class_2_summary
 
     def create_class_or_method_2_sentence(self, class_or_method_id, name, class_or_method_2_sentence):
