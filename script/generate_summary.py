@@ -1,4 +1,6 @@
 import json
+import os
+import pickle
 import time
 from json import dumps
 from pathlib import Path
@@ -13,7 +15,7 @@ from sekg.graph.exporter.graph_data import GraphData
 from sekg.ir.models.bm25 import BM25Model
 from sekg.ir.models.tf_idf import TFIDFModel
 
-from definitions import OUTPUT_DIR
+from definitions import OUTPUT_DIR, ROOT_DIR
 from util.path_util import PathUtil
 
 
@@ -24,7 +26,8 @@ class Summary:
     def __init__(self):
         graph_data_path = PathUtil.graph_data(pro_name="jdk8", version="v3")
         self.graph_data: GraphData = GraphData.load(graph_data_path)
-        model_dir = Path(OUTPUT_DIR) / "search_model" / "compound_newest"
+        model_dir = Path(OUTPUT_DIR) / "search_model" / "compound_bm25+avg_n2v"
+        # model_dir = Path(OUTPUT_DIR) / "search_model" / "compound_newest"
         self.model = self.create_search_model(model_dir)
 
     def get_sentence_from_class_or_method(self, id):
@@ -155,6 +158,18 @@ class Summary:
 
     @staticmethod
     def create_search_model(model_dir):
+        # 修改混合模型下的config参数
+        sub_search_model_config_path = model_dir / "submodel.config"
+        with open(sub_search_model_config_path, 'rb') as aq:
+            sub_search_model_config = pickle.loads(aq.read())
+        model_1 = Path(ROOT_DIR) / "output" / "search_model" / "bm25"
+        model_2 = Path(ROOT_DIR) / "output" / "search_model" / "avg_n2v"
+        new_sub_search_model_config = [
+            (model_1, sub_search_model_config[0][1], sub_search_model_config[0][2], sub_search_model_config[0][3]),
+            (model_2, sub_search_model_config[1][1], sub_search_model_config[1][2], sub_search_model_config[1][3]),
+        ]
+        with open(sub_search_model_config_path, 'wb') as out:
+            out.write(pickle.dumps(new_sub_search_model_config))
         model = CompoundSearchModel.load(model_dir)
         # model = AVGNode2VectorModel.load(model_dir)
         return model
@@ -178,7 +193,7 @@ class Summary:
         :param number: 需要搜寻的类数
         :return:
         """
-        # start_time = time.time()
+        start_time = time.time()
         all_class_2_summary = {}
         class_id_2_method_ids = {}
         # class_ids = []
@@ -209,6 +224,7 @@ class Summary:
             all_class_2_summary[index] = []
             class_node = self.graph_data.find_nodes_by_ids(class_id)
             class_name = class_node[0]['properties']['qualified_name']
+            class_name_1 = class_name + '.'
             method_num_2_id = {}
             method_nums = []
             method_ids = class_id_2_method_ids[class_id]
@@ -226,7 +242,6 @@ class Summary:
                 method_nums.append(self.sorted_method_and_sentence_id_dict[method_id])
             method_nums.sort()
             if len(method_nums) > 3:
-                class_name_1 = class_name + '.'
                 count_method = 0
                 for method_num in method_nums:
                     if count_method >= 3:
@@ -257,8 +272,8 @@ class Summary:
         #     class_summary = self.get_summary(query, class_name)
         #     all_class_2_summary[index] = class_summary
         #     index += 1
-        # end_time = time.time()
-        # print("time ", (end_time - start_time))
+        end_time = time.time()
+        print("time ", (end_time - start_time))
         return all_class_2_summary
 
     def create_class_or_method_2_sentence(self, class_or_method_id, name, class_or_method_2_sentence):
