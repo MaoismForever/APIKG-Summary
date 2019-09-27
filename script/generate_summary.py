@@ -29,6 +29,7 @@ class Summary:
         model_dir = Path(OUTPUT_DIR) / "search_model" / "compound_bm25+avg_n2v"
         # model_dir = Path(OUTPUT_DIR) / "search_model" / "compound_newest"
         self.model = self.create_search_model(model_dir)
+        print("it's ok for init!")
 
     def get_sentence_from_class_or_method(self, id):
         try:
@@ -162,6 +163,8 @@ class Summary:
         sub_search_model_config_path = model_dir / "submodel.config"
         with open(sub_search_model_config_path, 'rb') as aq:
             sub_search_model_config = pickle.loads(aq.read())
+        # 为了在linux下运行
+        # centos_dir = "/home/fdse/lvgang/APISummaryWebSite"
         model_1 = Path(ROOT_DIR) / "output" / "search_model" / "bm25"
         model_2 = Path(ROOT_DIR) / "output" / "search_model" / "avg_n2v"
         new_sub_search_model_config = [
@@ -193,7 +196,7 @@ class Summary:
         :param number: 需要搜寻的类数
         :return:
         """
-        start_time = time.time()
+        # start_time = time.time()
         all_class_2_summary = {}
         class_id_2_method_ids = {}
         # class_ids = []
@@ -272,8 +275,8 @@ class Summary:
         #     class_summary = self.get_summary(query, class_name)
         #     all_class_2_summary[index] = class_summary
         #     index += 1
-        end_time = time.time()
-        print("time ", (end_time - start_time))
+        # end_time = time.time()
+        # print("time ", (end_time - start_time))
         return all_class_2_summary
 
     def create_class_or_method_2_sentence(self, class_or_method_id, name, class_or_method_2_sentence):
