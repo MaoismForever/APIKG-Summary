@@ -2,6 +2,7 @@ import traceback
 
 from sekg.mysql.sqlalchemy_fulltext import FullText
 from sqlalchemy import Column, Integer, ForeignKey, Index, String, Text, func, or_
+from sqlalchemy.dialects.mysql import LONGTEXT
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 

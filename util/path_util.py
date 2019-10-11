@@ -293,6 +293,13 @@ class PathUtil:
         return str(concept_list_path)
 
     @staticmethod
+    def wikipedia_context_cache():
+        generic_cached_wikidata_dir = PathUtil.all_wikidata_dir()
+        all_wikidata_dir = Path(generic_cached_wikidata_dir)
+        generic_wikipedia_context_path = str(all_wikidata_dir / "wikipedia_context.bin")
+        return generic_wikipedia_context_path
+
+    @staticmethod
     def generic_title_search_cache():
         generic_cached_wikidata_dir = PathUtil.all_wikidata_dir()
         all_wikidata_dir = Path(generic_cached_wikidata_dir)

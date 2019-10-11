@@ -25,16 +25,13 @@ def build_v3_graph_for_pro(pro_name):
                                                                    word2vec_model_path=word2vec_model_path,
                                                                    pretrain_w2v_path=pretrain_w2v_path,
                                                                    output_graph_data_path=output_graph_data_path,
-
                                                                    concept_list=concept_list_path,
                                                                    generic_title_search_cache_path=generic_title_search_cache_path,
                                                                    generic_wikidata_item_cache_path=generic_wikidata_item_cache_path,
                                                                    fusion_temp_result_dir=wikidata_fusion_temp_result_dir,
                                                                    project_title_search_cache_path=project_title_search_cache_path,
                                                                    project_wikidata_item_cache_path=project_wikidata_item_cache_path,
-
                                                                    )
-    # todo: has bug for V3 builder
     graph_data.print_graph_info()
 
 

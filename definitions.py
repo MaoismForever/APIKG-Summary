@@ -15,8 +15,9 @@ DATA_DIR = os.path.join(ROOT_DIR, 'data')
 
 # the output dir
 OUTPUT_DIR = os.path.join(ROOT_DIR, 'output')
+WIKI_DIR = os.path.join(OUTPUT_DIR, 'wiki')
 
-# the output dir
+# the benchmark dir
 BENCHMARK_DIR = os.path.join(ROOT_DIR, "benchmark")
 
 # extracte_data dir
@@ -24,23 +25,5 @@ EXTRACTE_DATA_DIR = os.path.join(ROOT_DIR, "extracte_result")
 
 ## support all project
 SUPPORT_PROJECT_LIST = [
-    # "JabRef-2.6",
-    # "jedite-4.3",
-    # "ArgoUML-0.22",
-    # "mucommander-0.8.5",
-    # "Eclipse-3.0",
-
-    # "ArgoUML-0.24",
-    # "ArgoUML-0.26.2",
-    # "derby-10.9.1.0",
-    # "mahout-distribution-0.8",
-    # "jedite-4.2",
     "jdk8"
-    # "android27"
-
-]
-
-TEST_PROJECT_LIST = [
-    "jedite-4.3",
-    "JabRef-2.6",
 ]

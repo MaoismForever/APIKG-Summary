@@ -1,6 +1,7 @@
 import json
 import pickle
 import sys
+
 sys.path.append('/home/fdse/lvgang/APIKGSummaryV1')
 from pathlib import Path
 
@@ -262,6 +263,61 @@ class CodeGraphBuilder:
         fusion_temp_result_dir = Path(fusion_temp_result_dir)
         # fusion.save(PathUtil.graph_data(pro_name=pro_name, version="v2.5"))
         # todo: remove v2.5 graph builder and test?
+        with Path(str(fusion_temp_result_dir / "record.json")).open("w", encoding="utf-8") as f:
+            json.dump(record, f, indent=4)
+        with Path(str(fusion_temp_result_dir / "neighbours.bin")).open("wb") as f:
+            pickle.dump(neighbours, f)
+
+        fusion.add_wikidata_items(neighbours)
+        fusion.graph_data.add_label_to_all(pro_name)
+        fusion.save(output_graph_data_path)
+        print("end adding wikidata knowledge for %s" % pro_name)
+        return fusion.graph_data
+
+    def build_v3_graph_from_cache_simple(self, pro_name,
+                                         input_graph_data_path,
+                                         word2vec_model_path,
+                                         output_graph_data_path,
+                                         concept_list: list or set or str,
+                                         generic_title_search_cache_path,
+                                         generic_wikidata_item_cache_path,
+                                         project_title_search_cache_path,
+                                         project_wikidata_item_cache_path,
+                                         fusion_temp_result_dir,
+                                         pretrain_w2v_path,
+                                         wikipedia_context_path,
+                                         ):
+        print("start adding wikidata knowledge for %s" % pro_name)
+
+        fusion = GenericKGFusion()
+
+        # doc_collection = self.build_doc(graph_data_path=input_graph_data_path)
+        # preprocess_doc_collection = PreprocessMultiFieldDocumentCollection.create_from_doc_collection(
+        #     preprocessor=CodeDocPreprocessor(), doc_collection=doc_collection)
+        #
+        # print("start training the tuned word2vec model %s" % (word2vec_model_path))
+        # self.train_tune_word_embedding(
+        #     pretained_w2v_path=pretrain_w2v_path,
+        #     preprocess_doc_collection=preprocess_doc_collection,
+        #     tuned_word_embedding_save_path=word2vec_model_path,
+        # )
+
+        fusion.init_graph_data(input_graph_data_path)
+        fusion.load_w2v_model(word2vec_model_path)
+
+        # fusion.load_word_embedding(word2vec_model_path)
+
+        fusion.init_wd_from_cache(title_save_path=generic_title_search_cache_path,
+                                  item_save_path=generic_wikidata_item_cache_path)
+
+        # fusion.init_wd_from_cache(title_save_path=project_title_search_cache_path,
+        #                           item_save_path=project_wikidata_item_cache_path)
+
+        fusion.init_wikipedia_contex(wikipedia_context_path=wikipedia_context_path)
+
+        neighbours, record = fusion.simple_fuse()
+
+        fusion_temp_result_dir = Path(fusion_temp_result_dir)
         with Path(str(fusion_temp_result_dir / "record.json")).open("w", encoding="utf-8") as f:
             json.dump(record, f, indent=4)
         with Path(str(fusion_temp_result_dir / "neighbours.bin")).open("wb") as f:
