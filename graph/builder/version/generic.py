@@ -824,13 +824,13 @@ class GenericKGFusion:
             self.graph_data.remove_node(id)
         print("remove {} wiki nodes".format(len(remove_id)))
 
-    def delete_given_wiki_node(self):
-        term_titles = self.fetcher.item_cache
-        for wiki_id, item in term_titles.items():
-            ori_node_json = self.graph_data.find_one_node_by_property(WikiDataConstance.PRIMARY_PROPERTY_NAME,
-                                                                      item.wd_item_id)
-            if ori_node_json:
-                id = ori_node_json["id"]
-                self.graph_data.remove_node(id)
-                print("delete {} , {}".format(wiki_id, id))
-        self.delete_isolated_nodes_by_label(WikiDataConstance.LABEL_WIKIDATA)
+    # def delete_given_wiki_node(self):
+    #     term_titles = self.fetcher.item_cache
+    #     for wiki_id, item in term_titles.items():
+    #         ori_node_json = self.graph_data.find_one_node_by_property(WikiDataConstance.PRIMARY_PROPERTY_NAME,
+    #                                                                   item.wd_item_id)
+    #         if ori_node_json:
+    #             id = ori_node_json["id"]
+    #             self.graph_data.remove_node(id)
+    #             print("delete {} , {}".format(wiki_id, id))
+    #     self.delete_isolated_nodes_by_label(WikiDataConstance.LABEL_WIKIDATA)
