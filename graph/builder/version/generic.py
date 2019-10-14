@@ -2,6 +2,7 @@ import pickle
 import traceback
 from pathlib import Path
 
+import gensim
 import numpy as np
 from gensim.models import KeyedVectors
 from sekg.constant.constant import PropertyConstant, DomainConstant, WikiDataConstance
@@ -67,6 +68,7 @@ class GenericKGFusion:
 
     def init_graph_data(self, graph_data_path):
         self.graph_data = GraphData.load(graph_data_path)
+        print("#############", type(self.graph_data))
 
     def fetch_wikidata_by_name(self, terms, title_save_path=None, item_save_path=None):
         """
@@ -358,168 +360,47 @@ class GenericKGFusion:
         # print(self.graph_data.get_node_info_dict(domain_id))
         return domain_id
 
-    # def compute_all_domain_vector(self, ):
-    #     """
-    #     计算所有domain term的平均词向量
-    #     domain term在插入之前是处理过的，不需要再lemma
-    #     :return:
-    #     """
-    #     for node_id in self.graph_data.get_node_ids_by_label(DomainConstant.LABEL_DOMAIN_TERM):
-    #         try:
-    #             node_json = self.graph_data.get_node_info_dict(node_id=node_id)
-    #             if not node_json:
-    #                 continue
-    #             topic_words = []
-    #             node_properties = node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES]
-    #             lemma = node_properties[PropertyConstant.LEMMA]
-    #             aliases = node_properties.get(PropertyConstant.ALIAS, [])
-    #             aliases_en = node_properties.get("aliases_en", [])
-    #             description_en = node_properties.get("descriptions_en", "")
-    #             name = node_properties.get("name", "")
-    #             topic_words.append(lemma)
-    #             topic_words.extend(aliases)
-    #             topic_words.extend(aliases_en)
-    #             topic_words.append(description_en)
-    #             topic_words.append(name)
-    #
-    #             topic_text = " ".join(topic_words).lower()
-    #
-    #             if len(topic_text) == 0:
-    #                 return None
-    #             words = [w for w in topic_text.split() if w]
-    #             if len(words) == 0:
-    #                 return None
-    #             vec_des = sum([self.embedding.get(w, np.zeros([100])) for w in words]) / len(words)
-    #
-    #             self.all_domain_vector[node_id] = vec_des
-    #         except:
-    #             traceback.print_exc()
-
-    # def compute_top_fuse_for_one_wiki(self, wiki_text):
-    #     words = [token.lemma_.lower() for token in self.NLP(wiki_text) if
-    #              token.is_digit == False and token.is_stop == False and token.is_punct == False]
-    #     vec_wiki = sum([self.embedding.get(w, np.zeros([100])) for w in words]) / len(words)
-    #     score_dic = {}
-    #     for id, vec_domain in self.all_domain_vector.items():
-    #         score = self.compute_sim_for_two_vectors(vec_wiki, vec_domain)
-    #         score_dic[id] = score
-    #     sorted_score = sorted(score_dic.items(), key=lambda d: d[1], reverse=True)
-    #     fuse_domain = [(id, score) for id, score in sorted_score[:5] if score > 0.8]
-    #     return fuse_domain
-
-    # def simple_fuse(self, ):
-    #     """
-    #     简单融合是将wiki的词向量和domain term的词向量求相似度，找出相似度大于0.8的domain term与wiki term连上，
-    #     每个wiki term不超过5个domain term
-    #     :return:
-    #     """
-    #     record = []
-    #     id_item = {}
-    #     self.compute_all_domain_vector()
-    #
-    #     # valid_domain_id_set = self.graph_data.get_node_ids_by_label(DomainConstant.LABEL_DOMAIN_TERM)
-    #     print("start fusing!!!!!!!!!!!")
-    #     term_wikiitems = self.fetcher.item_cache
-    #     print(len(term_wikiitems))
-    #     term_wikipedia = self.wikipedia_cache
-    #     i = 0
-    #     for key, wikiitem in term_wikiitems.items():
-    #         i += 1
-    #         print("number {}: {}, Done!".format(i, key))
-    #         try:
-    #             wiki_text = ""
-    #             wikipedia_context = term_wikipedia.get(key, [])
-    #             if wikipedia_context:
-    #                 wiki_text = " ".join([context["context"] for context in wikipedia_context])
-    #             if not wiki_text:
-    #                 wiki_text = wikiitem.get_en_description()
-    #             fuse_domain = self.compute_top_fuse_for_one_wiki(wiki_text)
-    #             for id, score in fuse_domain:
-    #                 domain_node_json = self.graph_data.get_node_info_dict(id)
-    #                 record.append({
-    #                     "name": wikiitem.get_en_name(),
-    #                     "alias": wikiitem.get_en_aliases(),
-    #                     "description": wikiitem.get_en_description(),
-    #                     "wk relation text": self.generate_relations_text(wikiitem, term_wikiitems),
-    #                     "domain term": domain_node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES][
-    #                         PropertyConstant.LEMMA],
-    #                     "score": score,
-    #                     "combined name": self.get_compare_name_for_domain_term(domain_node_json),
-    #                     "link": True,
-    #                     "domain_id": id,
-    #                     "wd_item_id": wikiitem.wd_item_id
-    #                 })
-    #                 wikidata_node_id = self.add_wikidata_item(wikiitem)
-    #                 self.graph_data.add_relation(startId=id, endId=wikidata_node_id,
-    #                                              relationType="related to")
-    #                 id_item[wikidata_node_id] = wikiitem
-    #             # result = self.w2v_model.search(wiki_text, top_num=5, valid_doc_id_set=valid_domain_id_set)
-    #             # # print("*-" * 10)
-    #             # for item in result:
-    #             #     score = item.score
-    #             #     id = item.doc_id
-    #             #     domain_node_json = self.graph_data.get_node_info_dict(id)
-    #             #     # print(score)
-    #             #     if score > 0.8:
-    #             #         record.append({
-    #             #             "name": wikiitem.get_en_name(),
-    #             #             "alias": wikiitem.get_en_aliases(),
-    #             #             "description": wikiitem.get_en_description(),
-    #             #             "wk relation text": self.generate_relations_text(wikiitem, term_wikiitems),
-    #             #             "domain term": domain_node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES][
-    #             #                 PropertyConstant.LEMMA],
-    #             #             "score": score,
-    #             #             "combined name": self.get_compare_name_for_domain_term(domain_node_json),
-    #             #             "link": True,
-    #             #             "domain_id": id,
-    #             #             "wd_item_id": wikiitem.wd_item_id
-    #             #         })
-    #             #         wikidata_node_id = self.add_wikidata_item(wikiitem)
-    #             #         self.graph_data.add_relation(startId=id, endId=wikidata_node_id,
-    #             #                                      relationType="related to")
-    #             #         id_item[wikidata_node_id] = wikiitem
-    #         except Exception:
-    #             traceback.print_exc()
-    #     self.build_relation_between_wikidata_node_in_graph(term_wikiitems)
-    #     neighbours = set()
-    #     for _id, item in id_item.items():
-    #         for r in item.relation_property_name_list:
-    #             end_id_set = self.get_wikidata_item_ids_by_relation(item, r)
-    #             for e in end_id_set:
-    #                 neighbours.add(e)
-    #     self.graph_data.refresh_indexer()
-    #     return neighbours, record
+    def add_all_wiki_nodes(self):
+        print("start add all wiki nodes.......")
+        term_wikiitems = self.fetcher.item_cache
+        wikiiterms_ids = term_wikiitems.keys()
+        self.add_wikidata_items(wikiiterms_ids)
+        self.graph_data.refresh_indexer()
 
     def simple_fuse(self, ):
         """
-        简单融合是将wiki的词向量和domain term的词向量求相似度，找出相似度大于0.8的domain term与wiki term连上，
-        每个wiki term不超过5个domain term
+        simple fuse wiki data, the graph is with all wikidata nodes, we need to calculate similarity to filter some
         :return:
         """
         record = []
-        id_item = {}
         valid_domain_id_set = self.graph_data.get_node_ids_by_label(DomainConstant.LABEL_DOMAIN_TERM)
         term_wikiitems = self.fetcher.item_cache
         term_wikipedia = self.wikipedia_cache
         i = 0
         valid_doc_index = np.array(list(self.w2v_model.preprocess_doc_collection.doc_id_set_2_doc_index_set(
             valid_domain_id_set)))
+        doc_model = self.w2v_model.avg_w2v_model_field_map["doc"]
+        print("valid_doc_index size: ", valid_doc_index.size)
         for key, wikiitem in term_wikiitems.items():
             i += 1
-            print("number {}:{} ,Done!".format(i, key))
             try:
                 wiki_text = ""
                 wikipedia_context = term_wikipedia.get(key, [])
                 if wikipedia_context:
                     wiki_text = " ".join([context["context"] for context in wikipedia_context])
                 if not wiki_text:
-                    wiki_text = wikiitem.get_en_description()
-
+                    relation_text = self.generate_relations_text(wikiitem, term_wikiitems)
+                    description = wikiitem.get_en_description()
+                    en_name = wikiitem.get_en_name()
+                    en_aliases = wikiitem.get_en_aliases()
+                    wiki_text = " ".join([en_name, " ".join(en_aliases), relation_text, description])
                 wiki_words = self.w2v_model.preprocessor.clean(wiki_text)
                 wiki_vec = self.w2v_model.get_avg_w2v_vec(wiki_words)
-                score_vector = (self.w2v_model.w2v_model.similar_by_vector(wiki_vec, topn=None) + 1) / 2
+                score_vector = (doc_model.similar_by_vector(wiki_vec, topn=None) + 1) / 2
                 over_thred = np.where(score_vector > 0.8)
                 top_domain_valid = np.intersect1d(over_thred, valid_doc_index)
+                if top_domain_valid.size:
+                    print("number {}:{} ,Done!".format(i, key))
                 score_vector = score_vector[top_domain_valid]
                 sort_index = np.argsort(-score_vector)
                 score_vector = score_vector[sort_index]
@@ -542,8 +423,7 @@ class GenericKGFusion:
                         "alias": wikiitem.get_en_aliases(),
                         "description": wikiitem.get_en_description(),
                         "wk relation text": self.generate_relations_text(wikiitem, term_wikiitems),
-                        "domain term": domain_node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES][
-                            PropertyConstant.LEMMA],
+                        "domain term": domain_node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES]["qualified_name"],
                         "score": score,
                         "combined name": self.get_compare_name_for_domain_term(domain_node_json),
                         "link": True,
@@ -553,41 +433,11 @@ class GenericKGFusion:
                     wikidata_node_id = self.add_wikidata_item(wikiitem)
                     self.graph_data.add_relation(startId=id, endId=wikidata_node_id,
                                                  relationType="related to")
-                    id_item[wikidata_node_id] = wikiitem
-                # result = self.w2v_model.search(wiki_text, top_num=5, valid_doc_id_set=valid_domain_id_set)
-                # for item in result:
-                #     score = item.score
-                #     id = item.doc_id
-                #     domain_node_json = self.graph_data.get_node_info_dict(id)
-                #     if score > 0.8:
-                #         record.append({
-                #             "name": wikiitem.get_en_name(),
-                #             "alias": wikiitem.get_en_aliases(),
-                #             "description": wikiitem.get_en_description(),
-                #             "wk relation text": self.generate_relations_text(wikiitem, term_wikiitems),
-                #             "domain term": domain_node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES][
-                #                 PropertyConstant.LEMMA],
-                #             "score": score,
-                #             "combined name": self.get_compare_name_for_domain_term(domain_node_json),
-                #             "link": True,
-                #             "domain_id": id,
-                #             "wd_item_id": wikiitem.wd_item_id
-                #         })
-                #         wikidata_node_id = self.add_wikidata_item(wikiitem)
-                #         self.graph_data.add_relation(startId=id, endId=wikidata_node_id,
-                #                                      relationType="related to")
-                #         id_item[wikidata_node_id] = wikiitem
             except Exception:
                 traceback.print_exc()
-        self.build_relation_between_wikidata_node_in_graph(term_wikiitems)
-        neighbours = set()
-        for _id, item in id_item.items():
-            for r in item.relation_property_name_list:
-                end_id_set = self.get_wikidata_item_ids_by_relation(item, r)
-                for e in end_id_set:
-                    neighbours.add(e)
+        self.delete_isolated_nodes_by_label(WikiDataConstance.LABEL_WIKIDATA)
         self.graph_data.refresh_indexer()
-        return neighbours, record
+        return record
 
     def fuse(self, ):
         self.graph_data.create_index_on_property(WikiDataConstance.PRIMARY_PROPERTY_NAME)
@@ -898,9 +748,12 @@ class GenericKGFusion:
     def add_wikidata_items(self, wd_item_ids):
         term_wikiitems = self.fetcher.item_cache
         self.graph_data.refresh_indexer()
+        i = 0
         for wd_item_id in wd_item_ids:
-            if wd_item_id in term_wikiitems:
-                self.add_wikidata_item(term_wikiitems[wd_item_id])
+            i += 1
+            self.add_wikidata_item(term_wikiitems[wd_item_id])
+            if i == 50:
+                break
         self.build_relation_between_wikidata_node_in_graph(term_wikiitems)
 
     def build_relation_between_wikidata_node_in_graph(self, term_wikiitems):
@@ -932,6 +785,7 @@ class GenericKGFusion:
 
     def save(self, graph_data_path):
         self.graph_data.save(graph_data_path)
+        print("save ", type(self.graph_data))
 
     def is_valid_wikidata_item(self, item):
         for text in self.INVALID_TEXTS:
@@ -956,3 +810,27 @@ class GenericKGFusion:
             print("merge %d && %d !" % (nodes[0], nodes[i]))
             self.graph_data.merge_two_nodes_by_id(nodes[0], nodes[i], PropertyConstant.ALIAS, PropertyConstant.ALIAS)
             # print(self.graph_data.get_node_info_dict(nodes[0]))
+
+    def delete_isolated_nodes_by_label(self, label):
+        label_ids = self.graph_data.get_node_ids_by_label(label)
+        remove_id = set()
+        for id in label_ids:
+            in_relations = self.graph_data.get_all_in_relations(id)
+            out_relations = self.graph_data.get_all_out_relations(id)
+            if not in_relations and not out_relations:
+                remove_id.add(id)
+                print("remove {}: {}".format(label, id))
+        for id in remove_id:
+            self.graph_data.remove_node(id)
+        print("remove {} wiki nodes".format(len(remove_id)))
+
+    def delete_given_wiki_node(self):
+        term_titles = self.fetcher.item_cache
+        for wiki_id, item in term_titles.items():
+            ori_node_json = self.graph_data.find_one_node_by_property(WikiDataConstance.PRIMARY_PROPERTY_NAME,
+                                                                      item.wd_item_id)
+            if ori_node_json:
+                id = ori_node_json["id"]
+                self.graph_data.remove_node(id)
+                print("delete {} , {}".format(wiki_id, id))
+        self.delete_isolated_nodes_by_label(WikiDataConstance.LABEL_WIKIDATA)

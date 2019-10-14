@@ -20,14 +20,11 @@ def build_doc(pro_name, version):
                                                                 echo=False)
     builder.build_doc(session, preprocess=True)
     builder.save(document_collection_path)
-    # sub_doc_path = PathUtil.sub_doc(pro_name=pro_name, version=version)
-    # builder.extract_kg_doc_collection(sub_doc_path)
+
 
 
 if __name__ == '__main__':
-    # pro_list = SUPPORT_PROJECT_LIST
     pro_list = ["android27", "jdk8",]
-    # versions = ["v1", "v2", "v3"]
     versions = ["v1"]
 
     for pro_name in pro_list:

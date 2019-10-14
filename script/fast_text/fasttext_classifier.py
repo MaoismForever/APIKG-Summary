@@ -59,10 +59,6 @@ class FastTextClassifier:
         print("test result in testing data:")
         result = classifier.test(test_data_path)
         print(result)
-        # texts = ['The h component floating point number', 'Deprecated']
-        # labels, probability = classifier.predict(texts)
-        # print(labels)
-        # print(probability)
 
     def predict(self, text):
         """
@@ -78,7 +74,6 @@ class FastTextClassifier:
         label = self.classifier.predict_single(pre_data)
         # windows
         # label = self.classifier.predict(pre_data)
-        # 打印预测标签
         try:
             return label[0]
         except:

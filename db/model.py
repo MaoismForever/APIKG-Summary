@@ -1,8 +1,6 @@
 import traceback
 
 import sys
-sys.path.append('/home/fdse/lvgang/APIKGSummaryV1')
-
 from sekg.mysql.accessor import MySQLAccessor
 from sekg.mysql.sqlalchemy_fulltext import FullText
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, Index, func

@@ -2,7 +2,6 @@ from sekg.graph.exporter.graph_data import NodeInfo, NodeInfoFactory
 from sekg.util.code import CodeElementNameUtil
 
 import sys
-sys.path.append('/home/fdse/lvgang/APIKGSummaryV1')
 
 from db.api_model import APIEntity
 from db.model import CodeElement

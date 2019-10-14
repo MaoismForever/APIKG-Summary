@@ -1,6 +1,4 @@
 import sys
-
-sys.path.append('/home/fdse/lvgang/APIKGSummaryV1')
 from pathlib import Path
 from definitions import OUTPUT_DIR
 from script.fast_text.fasttext_classifier import FastTextClassifier

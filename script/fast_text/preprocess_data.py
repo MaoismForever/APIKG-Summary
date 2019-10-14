@@ -1,7 +1,6 @@
 import json
 import random
 import sys
-sys.path.append('/home/fdse/lvgang/APIKGSummaryV1')
 from pathlib import Path
 from definitions import DATA_DIR
 from nltk import WordPunctTokenizer
@@ -37,7 +36,6 @@ class PreprocessData:
         input;str
         :return: str
         """
-        # print("start remove sign code")
         remove_list = ["\n", "\t", "\r", "/", "*", ".", ";", "@", "{", "}", "<p>", "(", ")", "#", "=", ":", "+", "-",
                        "!", "[", "]", ",", ":", "<", ">", "|", "\\", "&", "'", "?", "\""]
         new_str = str
@@ -51,7 +49,6 @@ class PreprocessData:
         :param sentence:
         :return:
         """
-        # print("start remove stop words")
         words = WordPunctTokenizer().tokenize(sentence)
         st = stopwords.words('english')
         str_list = []
