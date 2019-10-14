@@ -41,7 +41,7 @@ class FastTextClassifier:
             # self.classifier = FastText.load_model(self.model_path)
         else:
             self.train_model()
-            print("no such model, train now")
+            print("no such model, model now")
 
     def set_model_path(self, new_path):
         self.model_path = new_path

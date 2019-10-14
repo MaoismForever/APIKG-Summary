@@ -103,7 +103,7 @@ class TriDNRTrainer():
 
     def train(self, model_path, numFea=100, train_size=0.2, random_state=2, dm=0, passes=2):
         """
-        train the graph vector from rw_path
+        model the graph vector from rw_path
         :param trainer: the trainer for one graph
         :param model_path: the output word2vec model path
         :param numFea: the dimensions of word2vec

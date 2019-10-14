@@ -34,7 +34,7 @@ def train_model(pro_name, version, first_model_config, second_model_config):
     compound_model_name = "compound_{base_model}+{extra_model}".format(base_model=first_model_config[0],
                                                                        extra_model=second_model_config[0])
 
-    print("try to train compoun model for %r" % compound_model_name)
+    print("try to model compoun model for %r" % compound_model_name)
 
     model_dir_path = PathUtil.sim_model(pro_name=pro_name, version=version, model_type=compound_model_name)
 

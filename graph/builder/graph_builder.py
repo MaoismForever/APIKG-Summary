@@ -316,7 +316,7 @@ class CodeGraphBuilder:
         fusion.save(output_graph_data_path)
         print("end adding wikidata knowledge for %s" % pro_name)
 
-        print("train w2v model for  new graph")
+        print("model w2v model for  new graph")
         builder = GraphNodeDocumentBuilder(graph_data=fusion.graph_data)
         doc_collection = builder.build_doc_for_kg()
 
@@ -325,89 +325,6 @@ class CodeGraphBuilder:
 
         AVGW2VFLModel.train(model_dir_path=word2vec_model_path,
                             doc_collection=preprocess_doc_collection)
-        return fusion.graph_data
-
-    def build_v3_graph_from_cache_with_twice_fuse(self, pro_name,
-                                                  input_graph_data_path,
-                                                  word2vec_model_path,
-                                                  output_graph_data_path,
-                                                  concept_list: list or set or str,
-                                                  generic_title_search_cache_path,
-                                                  generic_wikidata_item_cache_path,
-                                                  project_title_search_cache_path,
-                                                  project_wikidata_item_cache_path,
-                                                  fusion_temp_result_dir,
-                                                  pretrain_w2v_path,
-
-                                                  ):
-        print("start adding wikidata knowledge for %s" % pro_name)
-
-        # todo: need test
-        fusion = GenericKGFusion()
-
-        doc_collection = self.build_doc(graph_data_path=input_graph_data_path)
-        preprocess_doc_collection = PreprocessMultiFieldDocumentCollection.create_from_doc_collection(
-            preprocessor=CodeDocPreprocessor(), doc_collection=doc_collection)
-
-        print("start training the tuned word2vec model %s" % (word2vec_model_path))
-        self.train_tune_word_embedding(
-            pretained_w2v_path=pretrain_w2v_path,
-            preprocess_doc_collection=preprocess_doc_collection,
-            tuned_word_embedding_save_path=word2vec_model_path,
-        )
-
-        fusion.init_graph_data(input_graph_data_path)
-        fusion.load_word_embedding(word2vec_model_path)
-
-        fusion.init_wd_from_cache(title_save_path=generic_title_search_cache_path,
-                                  item_save_path=generic_wikidata_item_cache_path)
-
-        fusion.init_wd_from_cache(title_save_path=project_title_search_cache_path,
-                                  item_save_path=project_wikidata_item_cache_path)
-
-        neighbours, record = fusion.fuse()
-
-        fusion_temp_result_dir = Path(fusion_temp_result_dir)
-        # fusion.save(PathUtil.graph_data(pro_name=pro_name, version="v2.5"))
-        # todo: remove v2.5 graph builder and test?
-        with Path(str(fusion_temp_result_dir / "record.json")).open("w", encoding="utf-8") as f:
-            json.dump(record, f, indent=4)
-        with Path(str(fusion_temp_result_dir / "neighbours.bin")).open("wb") as f:
-            pickle.dump(neighbours, f)
-
-        fusion.add_wikidata_items(neighbours)
-        # fusion.graph_data.add_label_to_all(pro_name)
-        # fusion.save(output_graph_data_path)
-
-        print("start second fusing.........")
-        neighbours_2, record_2 = fusion.fuse()
-        fusion_temp_result_dir = Path(fusion_temp_result_dir)
-        with Path(str(fusion_temp_result_dir / "record_second.json")).open("w", encoding="utf-8") as f:
-            json.dump(record_2, f, indent=4)
-        with Path(str(fusion_temp_result_dir / "neighbours_second.bin")).open("wb") as f:
-            pickle.dump(neighbours_2, f)
-        fusion.add_wikidata_items(neighbours_2)
-
-        print("start merge domain nodes fuse same wikiitem...")
-        record.extend(record_2)
-        count_record = {}
-        for item in record:
-            if item["link"]:
-                item_tuple = (item["domain_id"], item["context_score"], item["topic_score"], item["score"])
-                if item["wd_item_id"] not in count_record:
-                    count_record[item["wd_item_id"]] = [item_tuple]
-                else:
-                    count_record[item["wd_item_id"]].append(item_tuple)
-        for key in count_record:
-            count_record[key] = sorted(count_record[key], key=lambda x: (x[1], x[2], x[3]))
-            if len(count_record[key]) > 1:
-                need_merge_nodes = [m[0] for m in count_record[key]]
-                fusion.merge_domain_nodes_fuse_same_wiki_item(need_merge_nodes)
-
-        fusion.graph_data.add_label_to_all(pro_name)
-        fusion.graph_data.refresh_indexer()
-        fusion.save(output_graph_data_path)
-        print("end adding wikidata knowledge for %s" % pro_name)
         return fusion.graph_data
 
     def build_v3_2_graph(self, pro_name,
@@ -519,31 +436,6 @@ class CodeGraphBuilder:
         v4_graph_data = self.add_reverse_edge(v4_graph_data)
         v4_graph_data.save(out_put_graph_data_path)
         print("build complete and save to %s" % out_put_graph_data_path)
-
-    @catch_exception
-    def build_v3_1_graph(self, pro_name, input_graph_data_path, output_graph_data_path,
-                         domain_concept_output_dir, pre_doc_collection_out_path):
-        print("start adding domain knowledge for %s" % pro_name)
-        builder = DomainKGFusion()
-        builder.init_graph_data(input_graph_data_path)
-
-        # domain_dir = Path(domain_concept_output_dir)
-        # term_save_path = str(domain_dir / "terms.txt")
-        # operation_save_path = str(domain_dir / "operations.txt")
-        # term_relation_save_path = str(domain_dir / "relations.json")
-        # linkage_save_path = str(domain_dir / "linkages.json")
-        # aliase_save_path = str(domain_dir / "aliases.json")
-        #
-        # reduce = ReduceDomainTerm(term_save_path, operation_save_path, term_relation_save_path, linkage_save_path,
-        #                           aliase_save_path, pre_doc_collection_out_path)
-        # delete_based_on_name_length = reduce.delete_based_on_name_length()
-        # v2_1_graph_data = builder.delete_nodes_and_relations(delete_based_on_name_length)
-
-        v2_1_graph_data = builder.filter_domain_by_name_length(name_length=30, name_split_number=3)
-        v2_1_graph_data = builder.delete_islocated_nodes_by_label(DomainConstant.LABEL_DOMAIN_TERM)
-        v2_1_graph_data = builder.delete_islocated_nodes_by_label(WikiDataConstance.LABEL_WIKIDATA)
-
-        v2_1_graph_data.save(output_graph_data_path)
 
     def delete_relations_with_operation(self, graph_data):
         class_node_ids = graph_data.get_node_ids_by_label("class")
