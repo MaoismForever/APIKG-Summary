@@ -11,7 +11,7 @@ from util.path_util import PathUtil
 
 def build_v3_graph_for_pro(pro_name):
     builder = CodeGraphBuilder()
-    input_graph_data_path = PathUtil.graph_data(pro_name=pro_name, version="v3")
+    input_graph_data_path = PathUtil.graph_data(pro_name=pro_name, version="v2_1")
     word2vec_model_path = PathUtil.sim_model(pro_name=pro_name, version="v3", model_type="avg_w2v")
     output_graph_data_path = PathUtil.graph_data(pro_name=pro_name, version="v3")
     # generic_title_search_cache_path = PathUtil.generic_title_search_cache()

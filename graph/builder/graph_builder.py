@@ -2,6 +2,8 @@ import json
 import pickle
 import sys
 
+from sekg.ir.models.avg_w2v import AVGW2VFLModel
+
 sys.path.append('/home/fdse/lvgang/APIKGSummaryV1')
 from pathlib import Path
 
@@ -286,14 +288,24 @@ class CodeGraphBuilder:
         print("start adding wikidata knowledge for %s" % pro_name)
 
         fusion = GenericKGFusion()
+        fusion.add_all_wiki_nodes()
+
+        builder = GraphNodeDocumentBuilder(graph_data=fusion.graph_data)
+        doc_collection = builder.build_doc_for_kg()
+
+        preprocess_doc_collection = PreprocessMultiFieldDocumentCollection.create_from_doc_collection(
+            preprocessor=CodeDocPreprocessor(), doc_collection=doc_collection)
+
+        AVGW2VFLModel.train(model_dir_path=word2vec_model_path,
+                            doc_collection=preprocess_doc_collection)
+
         fusion.init_graph_data(input_graph_data_path)
         fusion.load_w2v_model(word2vec_model_path)
 
         fusion.init_wd_from_cache(title_save_path=generic_title_search_cache_path,
                                   item_save_path=generic_wikidata_item_cache_path)
-
         fusion.init_wikipedia_contex(wikipedia_context_path=wikipedia_context_path)
-        fusion.add_all_wiki_nodes()
+
         record = fusion.simple_fuse()
 
         fusion_temp_result_dir = Path(fusion_temp_result_dir)
@@ -303,6 +315,16 @@ class CodeGraphBuilder:
         fusion.graph_data.add_label_to_all(pro_name)
         fusion.save(output_graph_data_path)
         print("end adding wikidata knowledge for %s" % pro_name)
+
+        print("train w2v model for  new graph")
+        builder = GraphNodeDocumentBuilder(graph_data=fusion.graph_data)
+        doc_collection = builder.build_doc_for_kg()
+
+        preprocess_doc_collection = PreprocessMultiFieldDocumentCollection.create_from_doc_collection(
+            preprocessor=CodeDocPreprocessor(), doc_collection=doc_collection)
+
+        AVGW2VFLModel.train(model_dir_path=word2vec_model_path,
+                            doc_collection=preprocess_doc_collection)
         return fusion.graph_data
 
     def build_v3_graph_from_cache_with_twice_fuse(self, pro_name,
