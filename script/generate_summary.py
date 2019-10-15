@@ -1,10 +1,7 @@
 import json
 import pickle
 from pathlib import Path
-import sys
-
 from sekg.ir.models.compound import CompoundSearchModel
-sys.path.append('/home/fdse/lvgang/APIKGSummaryV1')
 from sekg.graph.exporter.graph_data import GraphData
 from definitions import OUTPUT_DIR, ROOT_DIR
 from util.path_util import PathUtil
