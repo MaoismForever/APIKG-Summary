@@ -331,7 +331,6 @@ class DomainKGFusion:
         return min(terms, key=lambda x: len(x))
 
     def valid_term(self, term):
-        # todo: add more checker
         term = str(term)
         if len(term) <= 1 or term.isdigit():
             return False
@@ -433,7 +432,6 @@ class DomainKGFusion:
         self.graph_data.create_index_on_property(OperationConstance.PRIMARY_PROPERTY_NAME)
         self.graph_data.create_index_on_property(PropertyConstant.ALIAS)
 
-        # todo:update the index when add
         print("start fuse with domain knowledge")
         self.graph_data.print_graph_info()
 
@@ -573,7 +571,6 @@ class DomainKGFusion:
             fused_term_to_aliases_map[term_name] = list(all_aliases_list)
 
         operation_ids = self.graph_data.get_node_ids_by_label(OperationConstance.LABEL_OPERATION)
-        # todo: build the relation between operation and domain term
         for operation_id in operation_ids:
             node_json = self.graph_data.get_node_info_dict(operation_id)
             term_name = node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES][OperationConstance.PRIMARY_PROPERTY_NAME]
@@ -592,7 +589,6 @@ class DomainKGFusion:
                 json.dump(fused_term_to_aliases_map,
                           f, indent=4)
 
-        # todo: build the aliases for operation
         self.graph_data.refresh_indexer()
 
     def delete_islocated_nodes_by_label(self, label):

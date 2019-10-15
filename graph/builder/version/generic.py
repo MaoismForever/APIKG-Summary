@@ -49,7 +49,6 @@ class GenericKGFusion:
         print("Init from cache...")
 
     def init_wikipedia_contex(self, wikipedia_context_path=None):
-        # TODO 将wikipedia的内容加到wikisearcher这个类里，就不用在GenericKGFusion中load了
         if wikipedia_context_path is not None and Path(wikipedia_context_path).exists():
             with open(wikipedia_context_path, "rb") as f:
                 self.wikipedia_cache = pickle.load(f)
@@ -189,7 +188,6 @@ class GenericKGFusion:
 
         if len(words) == 0:
             return None
-        # todo: the size of vector should be adjust
         vec_des = sum([self.embedding.get(w, np.zeros([100])) for w in words]) / len(words)
 
         return vec_des
@@ -442,7 +440,6 @@ class GenericKGFusion:
     def fuse(self, ):
         self.graph_data.create_index_on_property(WikiDataConstance.PRIMARY_PROPERTY_NAME)
         term_titles = self.fetcher.title_cache
-        # todo: by calling the method not access the field
         term_wikiitems = self.fetcher.item_cache
 
         id_item = {}

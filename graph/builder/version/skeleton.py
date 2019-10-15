@@ -95,7 +95,6 @@ class SkeletonKGBuilder:
                     fail_num = fail_num + 1
                 continue
             if relation_type == relation_type == CodeEntityRelationCategory.RELATION_CATEGORY_METHOD_IMPLEMENT_CODE_USE_CLASS:
-                # todo: fix this by removing, USE CLASS RELATION IS NOT SO USEFUL FOR FEATURE LOCATION, IT COULD REPLACE BY(a, USE METHOD)->(METHOD, BELONG ,CLASS）
                 continue
 
             if relation_type == CodeEntityRelationCategory.RELATION_CATEGORY_BELONG_TO or relation_type == CodeEntityRelationCategory.RELATION_CATEGORY_EXTENDS or relation_type == CodeEntityRelationCategory.RELATION_CATEGORY_IMPLEMENTS:

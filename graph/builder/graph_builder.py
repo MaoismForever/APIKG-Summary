@@ -237,7 +237,6 @@ class CodeGraphBuilder:
                                   ):
         print("start adding wikidata knowledge for %s" % pro_name)
 
-        # todo: need test
         fusion = GenericKGFusion()
 
         doc_collection = self.build_doc(graph_data_path=input_graph_data_path)
@@ -264,7 +263,6 @@ class CodeGraphBuilder:
 
         fusion_temp_result_dir = Path(fusion_temp_result_dir)
         # fusion.save(PathUtil.graph_data(pro_name=pro_name, version="v2.5"))
-        # todo: remove v2.5 graph builder and test?
         with Path(str(fusion_temp_result_dir / "record.json")).open("w", encoding="utf-8") as f:
             json.dump(record, f, indent=4)
         with Path(str(fusion_temp_result_dir / "neighbours.bin")).open("wb") as f:
@@ -336,7 +334,6 @@ class CodeGraphBuilder:
                          ):
         print("start adding wikidata knowledge for %s" % pro_name)
 
-        # todo: need test
         fusion = GenericKGFusion()
 
         fusion.init_graph_data(input_graph_data_path)
