@@ -18,13 +18,7 @@ for pro_name in pro_list:
     graph_data: GraphData = GraphData.load(graph_data_path)
     new_graph_data_path = PathUtil.graph_data(pro_name=pro_name, version="v2")
     res = ExtractResultImport(graph_data, new_graph_data_path, 2)
-
-    length = len(docs)
-    number = 0
     for doc in docs:
-        number += 1
-        if number % 200 == 1:
-            print("总共%d条数据，已执行%d条数据" % (length, number))
         api_id = doc.get_document_id()
         short_descs = doc.get_doc_text_by_field('short_description_sentences')
         for short_desc in short_descs:
