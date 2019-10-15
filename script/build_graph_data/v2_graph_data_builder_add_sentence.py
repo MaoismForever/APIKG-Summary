@@ -7,10 +7,10 @@ from util.graph_load_util import GraphLoadUtil
 from util.import_extract_result_2_graph_data import ExtractResultImport
 from util.path_util import PathUtil
 
-pro_list = ["jdk8"]
 classifier = FastTextClassifier()
 
-for pro_name in pro_list:
+
+def build_v2_graph_for_pro(pro_name):
     collection = GraphLoadUtil.load_doc(pro_name, "v1")
     docs = collection.get_document_list()
 
@@ -25,7 +25,8 @@ for pro_name in pro_list:
             label = list(classifier.predict(short_desc))[0]
             if label == '__label__0':
                 print(short_desc)
-                filter_sentence_path = str(Path(OUTPUT_DIR) / "graph" / "jdk8" / "filter_data" / "filter_sentence.txt")
+                filter_sentence_path = str(
+                    Path(OUTPUT_DIR) / "graph" / "jdk8" / "filter_data" / "filter_sentence.txt")
                 with open(filter_sentence_path, "a") as f:
                     f.write(short_desc)
                     f.write("\n")
@@ -33,3 +34,8 @@ for pro_name in pro_list:
             else:
                 res.add_sentence_relation(short_desc, api_id)
     res.save_new_graph_data()
+
+
+if __name__ == '__main__':
+    pro_list = ["jdk8"]
+    build_v2_graph_for_pro(pro_list[0])
