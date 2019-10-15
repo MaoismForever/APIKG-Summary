@@ -1,145 +1,48 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+from pathlib import Path
 
-import re
-import networkx as nx
+from sekg.graph.exporter.graph_data import GraphData
+from sekg.model.node2vec.train import GraphNode2VecTrainer
 
-from sekg.graph.exporter.weight_graph_data import WeightGraphData
-from n2v.TriDNR.tridnr import TriDNR
+from definitions import OUTPUT_DIR, SUPPORT_PROJECT_LIST
+from util.annotation import catch_exception
 
 
-class TriDNRTrainer():
-    def __init__(self, graph_data):
-        self.graph_data = graph_data
-        self.node_num = graph_data.get_node_num()
-        self.nx_G_instance = None
-        self.agjedges = []
-        self.labels_dict = {}
-        self.labels = []
-        self.docs = []
+@catch_exception
+def train_node2vec(pro_name, version):
+    print("train node2vec for %s at version %s" % (pro_name, version))
+    graph_data_output_dir = Path(OUTPUT_DIR) / "graph" / pro_name
+    graph_data_output_dir.mkdir(exist_ok=True, parents=True)
+    node2vec_output_dir = graph_data_output_dir / "GraphEmbedding"
+    node2vec_output_dir.mkdir(exist_ok=True, parents=True)
+    # train_weight_graph_data(graph_data_output_dir, node2vec_output_dir, pro_name, version)
+    graph_random_walk_path = str(
+        node2vec_output_dir / "{pro}.{version}.unweight.rwp".format(pro=pro_name, version=version))
+    trainer = GraphNode2VecTrainer(GraphData.load(
+        str(graph_data_output_dir / ("{pro}.{version}.graph".format(pro=pro_name, version=version)))))
+    trainer.init_graph(weight=False)
+    trainer.generate_random_path(rw_path_store_path=graph_random_walk_path)
+    graph2vec_model_path = str(
+        node2vec_output_dir / "{pro}.{version}.unweight.node2vec".format(pro=pro_name, version=version))
+    GraphNode2VecTrainer.train(rw_path_store_path=graph_random_walk_path, model_path=graph2vec_model_path,
+                               dimensions=100)
 
-    def init_graph(self, weight=False):
-        if weight is False:
-            self.init_unweight_graph()
-        else:
-            self.init_weight_graph()
 
-    def init_graph_adjedges(self):
-        relation_pairs = self.graph_data.get_relation_pairs()
-        adjedges_list = {}
-        for pairs in relation_pairs:
-            if pairs[0] in adjedges_list.keys():
-                adjedges_list[pairs[0]].append(pairs[1])
-            else:
-                adjedges_list[pairs[0]] = [pairs[1]]
-        self.agjedges = [([key_node] + adjedges_list[key_node]) for key_node in adjedges_list.keys()]
+def train_weight_graph_data(graph_data_output_dir, node2vec_output_dir, pro_name, version):
+    graph_random_walk_path = str(
+        node2vec_output_dir / "{pro}.{version}.weight.rwp".format(pro=pro_name, version=version))
+    trainer = GraphNode2VecTrainer(
+        GraphData.load(str(graph_data_output_dir / ("{pro}.{version}.graph".format(pro=pro_name, version=version)))))
+    trainer.init_graph(weight=True)
+    trainer.generate_random_path(rw_path_store_path=graph_random_walk_path)
+    graph2vec_model_path = str(
+        node2vec_output_dir / "{pro}.{version}.weight.node2vec".format(pro=pro_name, version=version))
+    GraphNode2VecTrainer.train(rw_path_store_path=graph_random_walk_path, model_path=graph2vec_model_path,
+                               dimensions=100)
 
-    def init_graph_lables_and_description(self):
-        labels = self.graph_data.get_all_labels()
-        labels_dict = {}
-        graph_label = []
-        description = []
-        for index, label in enumerate(labels):
-            labels_dict[index] = label
-        self.labels_dict = dict(zip(labels_dict.values(), labels_dict.keys()))
-        node_ids = self.graph_data.get_node_ids()
-        for ids in node_ids:
-            node = self.graph_data.find_nodes_by_ids(ids)[0]
-            label = list(node["labels"])
-            if labels_dict[0] in label:
-                label.remove(labels_dict[0])
-            if labels_dict[17] in label and len(label) > 1:
-                label.remove(labels_dict[17])
-            if labels_dict[3] in label and len(label) > 1:
-                label.remove(labels_dict[3])
-            if labels_dict[2] in label and len(label) > 1:
-                label.remove(labels_dict[2])
-            if labels_dict[9] in label and len(label) > 1:
-                label.remove(labels_dict[9])
-            if labels_dict[4] in label and len(label) > 1:
-                label.remove(labels_dict[4])
-            graph_label.append([str(ids), str(self.labels_dict[label[0]])])
-            description.append([str(ids), self.doc_extract(node)])
-        self.labels = graph_label
-        self.labels_dict = labels_dict
-        self.docs = description
 
-    def init_unweight_graph(self):
-        node_ids = self.graph_data.get_node_ids()
-        relation_pairs = self.graph_data.get_relation_pairs()
-        print("node num=%d" % self.node_num)
-        print("relation num=%d" % len(relation_pairs))
-        G = nx.DiGraph()
-        G.add_nodes_from(node_ids)
-        G.add_edges_from(relation_pairs, weight=1.0)
-        # todo: a relation weight support
-        self.nx_G_instance = G
-        print("init graph trainer by unweight relations")
+if __name__ == "__main__":
 
-    def init_weight_graph(self):
-
-        node_ids = self.graph_data.get_node_ids()
-        relation_pairs_with_type = self.graph_data.get_relation_pairs_with_type()
-        print("node num=%d" % self.node_num)
-        print("relation num=%d" % len(relation_pairs_with_type))
-
-        print(" pre-compute weight start")
-
-        weight_graph_data = WeightGraphData(self.graph_data)
-        weight_graph_data.precompute_weight()
-        print("pre-compute weight end")
-
-        weight_relation_tuples = []
-        for (start_id, relation_type, end_id) in relation_pairs_with_type:
-            weight = weight_graph_data.get_relation_tuple_weight(start_node_id=start_id, relation_name=relation_type,
-                                                                 end_node_id=end_id)
-            weight_relation_tuples.append((start_id, end_id, weight))
-
-        G = nx.DiGraph()
-        G.add_nodes_from(node_ids)
-        G.add_weighted_edges_from(weight_relation_tuples)
-        self.nx_G_instance = G
-        print("init graph trainer by weighted relations(tf-idf tuple)")
-
-    def train(self, model_path, numFea=100, train_size=0.2, random_state=2, dm=0, passes=2):
-        """
-        model the graph vector from rw_path
-        :param trainer: the trainer for one graph
-        :param model_path: the output word2vec model path
-        :param numFea: the dimensions of word2vec
-        :param cores: the num of pipeline training
-        :return:
-        """
-
-        print("save graph2vec training")
-        tridnr_model = TriDNR(self.agjedges, self.labels, self.docs, size=numFea, dm=dm, textweight=.8,
-                              train_size=train_size, seed=random_state, passes=passes)
-        tridnr_model.save(model_path)
-        print("save tridnr model to %s" % model_path)
-        return tridnr_model
-
-    @staticmethod
-    def doc_extract(node):
-        doc = ""
-        keywords = []
-        if "qualified_name" in node["properties"].keys():
-            name = node["properties"]["qualified_name"].split(" ")[0]
-        elif "term_name" in node["properties"].keys():
-            name = node["properties"]["term_name"].split(" ")[0]
-        elif "operation_name" in node["properties"].keys():
-            name = node["properties"]["operation_name"].split(" ")[0]
-        for item in re.findall("[A-Z]*[a-z]*", name):
-            if item not in keywords:
-                keywords.append(item)
-        if "alias" in node["properties"].keys():
-            alias = node["properties"]["alias"]
-            for alia in alias:
-                for item in re.findall("[A-Z]*[a-z]*", alia):
-                    if item not in keywords:
-                        keywords.append(item)
-        if "short_description" in node["properties"].keys():
-            if node["properties"]["short_description"] is None:
-                node["properties"]["short_description"] = ""
-            doc += node["properties"]["short_description"]
-        doc += " ".join(keywords)
-        return doc
+    pro_list = SUPPORT_PROJECT_LIST
+    for version in ["v1", "v2", "v3"]:
+        for pro_name in pro_list:
+            train_node2vec(pro_name, version)

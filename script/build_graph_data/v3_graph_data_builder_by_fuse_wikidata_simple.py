@@ -4,7 +4,6 @@ import sys
 
 sys.path.append('/home/fdse/lvgang/APIKGSummaryV1')
 
-from definitions import SUPPORT_PROJECT_LIST
 from graph.builder.graph_builder import CodeGraphBuilder
 from util.path_util import PathUtil
 
