@@ -10,7 +10,7 @@ from util.graph_load_util import GraphLoadUtil
 from util.import_extract_result_2_graph_data import ExtractResultImport
 from util.path_util import PathUtil
 
-test = GraphLoadUtil();
+test = GraphLoadUtil()
 collection = GraphLoadUtil.load_doc("android27", "v1")
 
 
