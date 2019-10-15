@@ -19,7 +19,7 @@ def train_node2vec(pro_name, version):
         node2vec_output_dir / "{pro}.{version}.unweight.rwp".format(pro=pro_name, version=version))
     trainer = GraphNode2VecTrainer(GraphData.load(
         str(graph_data_output_dir / ("{pro}.{version}.graph".format(pro=pro_name, version=version)))))
-    trainer.init_graph(weight=False)
+    trainer.init_unweight_graph()
     trainer.generate_random_path(rw_path_store_path=graph_random_walk_path)
     graph2vec_model_path = str(
         node2vec_output_dir / "{pro}.{version}.unweight.node2vec".format(pro=pro_name, version=version))
