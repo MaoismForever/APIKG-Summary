@@ -457,6 +457,7 @@ class GenericKGFusion:
         return neighbours
 
     def get_all_neighbours_id_by_item_id(self, item_id):
+        neighbours = set()
         item = self.fetcher.item_cache.get(item_id, None)
         if item == None:
             return set()

@@ -331,7 +331,6 @@ class DomainKGFusion:
         return min(terms, key=lambda x: len(x))
 
     def valid_term(self, term):
-        # todo: add more checker
         term = str(term)
         if len(term) <= 1 or term.isdigit():
             return False
