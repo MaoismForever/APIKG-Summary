@@ -11,7 +11,6 @@ pro_list = ["jdk8"]
 classifier = FastTextClassifier()
 
 for pro_name in pro_list:
-    print("正在处理%s" % pro_name)
     collection = GraphLoadUtil.load_doc(pro_name, "v1")
     docs = collection.get_document_list()
 
