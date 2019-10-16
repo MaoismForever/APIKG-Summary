@@ -22,8 +22,6 @@ class SVMTrainer():
     def __init__(self):
         pro_name = "jdk8"
         version = "v4"
-        self.graph_data_path = PathUtil.graph_data(pro_name, version)
-        self.graph_data = GraphData.load(self.graph_data_path)
         self.model_dir_path = str(Path(OUTPUT_DIR) / "sim_models" / "jdk8" / "v4" / "svm")
         self.model = FilterSemanticTFIDFNode2VectorModel(name="svm", model_dir_path=self.model_dir_path)
         self.document_collection_path = PathUtil.doc(pro_name, version)
@@ -37,8 +35,6 @@ class SVMTrainer():
 
     def train(self):
         self.model.train_from_doc_collection_with_preprocessor(self.doc_collection,
-                                                               graph_data=self.graph_data,
-                                                               graph_data_path=self.graph_data_path,
                                                                pretrain_node2vec_path=self.pretrain_node2vec_path,
                                                                kg_name_searcher_path=self.kg_name_searcher_path,
                                                                doc_sim_model_path=self.doc_sim_model_path,
