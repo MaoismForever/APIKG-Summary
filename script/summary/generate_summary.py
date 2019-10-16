@@ -159,6 +159,7 @@ class Summary:
         for item in sorted_method_and_sentence_ids:
             self.sorted_method_and_sentence_id_dict[item.doc_id] = number
             number += 1
+        print(sorted_method_and_sentence_ids)
         index = 0
         for class_id in list(class_id_2_method_ids.keys()):
             all_class_2_summary[index] = []
