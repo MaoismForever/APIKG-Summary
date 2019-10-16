@@ -2,10 +2,11 @@ import traceback
 from pathlib import Path
 
 import sys
+
 sys.path.append('/home/fdse/lvgang/APIKGSummaryV1')
 
 from bs4 import BeautifulSoup
-from sekg.graph.exporter.graph_data import GraphDataReader, GraphData
+from sekg.graph.exporter.graph_data import GraphDataReader, GraphData, NodeInfo
 from sekg.ir.doc.wrapper import MultiFieldDocumentCollection, MultiFieldDocument
 
 from doc.node_info import ProjectKGNodeInfoFactory, CodeElementNodeInfo, DomainEntityNodeInfo, OperationEntityNodeInfo, \
@@ -160,7 +161,8 @@ class GraphNodeDocumentBuilder:
         self.doc_collection.add_field_to_doc(doc_id=node_info.node_id, field_name="aliases",
                                              value="\n".join(node_info.get_all_names()))
         self.doc_collection.add_field_to_doc(doc_id=node_info.node_id, field_name="description",
-                                             value=node_info.properties.get("descriptions_en", "") + " ".join(all_mention_info))
+                                             value=node_info.properties.get("descriptions_en", "") + " ".join(
+                                                 all_mention_info))
         self.add_text_for_out_relation(node_info.node_id)
         self.add_text_for_in_relation(node_info.node_id)
 
@@ -172,12 +174,11 @@ class GraphNodeDocumentBuilder:
         print("start building doc")
         for id in self.graph_data.get_node_ids():
             node_info = self.graph_data_reader.get_node_info(id)
-
             try:
                 if node_info is None:
                     continue
-                if node_info.get_main_name() is None:
-                    continue
+                # if node_info.get_main_name() is None:
+                #     continue
 
                 doc = MultiFieldDocument(id=node_info.node_id, name=node_info.get_main_name())
                 self.doc_collection.add_document(doc)
@@ -187,12 +188,14 @@ class GraphNodeDocumentBuilder:
                                                          value=data)
                 if isinstance(node_info, CodeElementNodeInfo):
                     self.build_doc_for_code_element(node_info)
-                if isinstance(node_info, DomainEntityNodeInfo):
+                elif isinstance(node_info, DomainEntityNodeInfo):
                     self.build_doc_for_domain_entity(node_info)
-                if isinstance(node_info, OperationEntityNodeInfo):
+                elif isinstance(node_info, OperationEntityNodeInfo):
                     self.build_doc_for_operation_entity(node_info)
-                if isinstance(node_info, WikidataEntityNodeInfo):
+                elif isinstance(node_info, WikidataEntityNodeInfo):
                     self.build_doc_for_wikidata_entity(node_info)
+                else:
+                    self.build_doc_for_sentence(node_info)
 
             except:
                 traceback.print_exc()
@@ -349,7 +352,6 @@ class GraphNodeDocumentBuilder:
     def build_doc_for_kg(self, output_path=None):
         """
         build the doc for kg, only include aliases, out relation, description
-        #todo: this
         :return:
         """
         self.clear()
@@ -373,23 +375,26 @@ class GraphNodeDocumentBuilder:
                 descriptions.append(doc.get_doc_text_by_field("out_relations"))
                 descriptions.append(doc.get_doc_text_by_field("description"))
 
-            if isinstance(node_info, DomainEntityNodeInfo):
+            elif isinstance(node_info, DomainEntityNodeInfo):
                 descriptions.append(node_info.get_main_name())
                 descriptions.append(doc.get_doc_text_by_field("aliases"))
                 descriptions.append(doc.get_doc_text_by_field("out_relations"))
                 descriptions.append(doc.get_doc_text_by_field("description"))
 
-            if isinstance(node_info, OperationEntityNodeInfo):
+            elif isinstance(node_info, OperationEntityNodeInfo):
                 descriptions.append(node_info.get_main_name())
                 descriptions.append(doc.get_doc_text_by_field("aliases"))
                 descriptions.append(doc.get_doc_text_by_field("out_relations"))
                 descriptions.append(doc.get_doc_text_by_field("description"))
 
-            if isinstance(node_info, WikidataEntityNodeInfo):
+            elif isinstance(node_info, WikidataEntityNodeInfo):
                 descriptions.append(node_info.get_main_name())
                 descriptions.append(doc.get_doc_text_by_field("aliases"))
                 descriptions.append(doc.get_doc_text_by_field("out_relations"))
                 descriptions.append(doc.get_doc_text_by_field("description"))
+            else:
+                descriptions.append(doc.get_doc_text_by_field("sentence_text"))
+                descriptions.append(doc.get_doc_text_by_field("out_relations"))
 
             description = "\n".join([text for text in descriptions if text])
             new_doc.add_field("doc", description)
@@ -398,7 +403,14 @@ class GraphNodeDocumentBuilder:
             sub_doc_collection.add_document(new_doc)
         if output_path is not None:
             sub_doc_collection.save(output_path)
+        print("collection len{}".format(sub_doc_collection.get_num()))
         return sub_doc_collection
+
+    def build_doc_for_sentence(self, node_info):
+        self.doc_collection.add_field_to_doc(doc_id=node_info.node_id, field_name="sentence_text",
+                                             value=node_info.properties["sentence_name"])
+        self.add_text_for_out_relation(node_info.node_id)
+        self.add_text_for_in_relation(node_info.node_id)
 
     def build_doc_for_operation_entity(self, node_info):
         self.doc_collection.add_field_to_doc(doc_id=node_info.node_id, field_name="aliases",

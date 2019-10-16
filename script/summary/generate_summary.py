@@ -154,16 +154,11 @@ class Summary:
             self.class_or_method_2_sentence_ids[class_or_method_id] = self.get_sentence_from_class_or_method(
                 class_or_method_id)
             method_and_sentence_ids += self.class_or_method_2_sentence_ids[class_or_method_id]
-        print(method_and_sentence_ids)
-        print(len(method_and_sentence_ids))
         sorted_method_and_sentence_ids = self.model.search(query, len(method_and_sentence_ids), method_and_sentence_ids)
         number = 1
         for item in sorted_method_and_sentence_ids:
             self.sorted_method_and_sentence_id_dict[item.doc_id] = number
             number += 1
-        print(self.sorted_method_and_sentence_id_dict)
-        print("#"*20)
-        print(self.class_or_method_2_sentence_ids)
         index = 0
         for class_id in list(class_id_2_method_ids.keys()):
             print(class_id)
