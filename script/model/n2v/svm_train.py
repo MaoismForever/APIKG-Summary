@@ -22,8 +22,8 @@ class SVMTrainer():
     def __init__(self):
         pro_name = "jdk8"
         version = "v4"
-        self.graph_data = GraphData.load(
-            str(Path(DATA_DIR) / "graph" / ("{pro}.{version}.graph".format(pro=pro_name, version="v4"))))
+        self.graph_data_path = PathUtil.graph_data(pro_name, version)
+        self.graph_data = GraphData.load(self.graph_data_path)
         model_dir_path = Path(OUTPUT_DIR) / 'svm_model'
         self.model = FilterSemanticTFIDFNode2VectorModel(name="svm", model_dir_path=model_dir_path)
         self.document_collection_path = Path(DATA_DIR) / 'doc' / pro_name / 'jdk8.v4.dc'
@@ -32,14 +32,15 @@ class SVMTrainer():
         self.processor = Preprocessor()
         self.doc_collection = PreprocessMultiFieldDocumentCollection.create_from_doc_collection(self.processor,
                                                                                                 self.collection)
-        self.pretrain_node2vec_path = PathUtil.node2vec(pro_name="jdk8", version="v4", weight="unweight")
+        self.pretrain_node2vec_path = PathUtil.node2vec(pro_name="jdk8", version=version, weight="unweight")
         self.kg_name_searcher_path = str(Path(
             DATA_DIR) / "graph" / ("{pro}.{version}.namesearcher".format(pro=pro_name, version="v4")))
-        self.doc_sim_model_path = PathUtil.sim_model(pro_name=pro_name, version="v4", model_type="avg_w2v")
-        # self.doc_sim_model_path = PathUtil.best_text_sim_model(pro_name=pro_name, version=version)
+        self.doc_sim_model_path = PathUtil.sim_model(pro_name=pro_name, version=version, model_type="avg_w2v")
 
     def train(self):
         self.model.train_from_doc_collection_with_preprocessor(self.doc_collection,
+                                                               graph_data=self.graph_data,
+                                                               graph_data_path=self.graph_data_path,
                                                                pretrain_node2vec_path=self.pretrain_node2vec_path,
                                                                kg_name_searcher_path=self.kg_name_searcher_path,
                                                                doc_sim_model_path=self.doc_sim_model_path,
