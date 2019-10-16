@@ -11,7 +11,7 @@ from sekg.graph.exporter.weight_graph_data import WeightGraphData
 from sekg.ir.doc.wrapper import PreprocessMultiFieldDocumentCollection, MultiFieldDocumentCollection
 from sekg.ir.models.n2v.svm.filter_semantic_tfidf_n2v import FilterSemanticTFIDFNode2VectorModel
 from sekg.ir.models.tf_idf import TFIDFModel
-
+from sekg.ir.models.avg_w2v import AVGW2VFLModel
 from definitions import OUTPUT_DIR, DATA_DIR
 from sekg.ir.preprocessor.base import Preprocessor
 
@@ -43,7 +43,7 @@ class SVMTrainer():
                                                                pretrain_node2vec_path=self.pretrain_node2vec_path,
                                                                kg_name_searcher_path=self.kg_name_searcher_path,
                                                                doc_sim_model_path=self.doc_sim_model_path,
-                                                               doc_sim_model_class=TFIDFModel
+                                                               doc_sim_model_class=AVGW2VFLModel
                                                                )
         self.model.save(str(OUTPUT_DIR / "sim_models" / "jdk8" / "v4" / "svm"))
 
