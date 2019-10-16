@@ -3,6 +3,8 @@ import pickle
 from pathlib import Path
 from sekg.ir.models.compound import CompoundSearchModel
 from sekg.graph.exporter.graph_data import GraphData
+from sekg.ir.models.n2v.svm.filter_semantic_tfidf_n2v import FilterSemanticTFIDFNode2VectorModel
+
 from definitions import OUTPUT_DIR, ROOT_DIR
 from util.path_util import PathUtil
 
@@ -111,9 +113,9 @@ class Summary:
 
     @staticmethod
     def create_search_model(model_dir):
-        sub_search_model_config_path = model_dir / "submodel.config"
-        with open(sub_search_model_config_path, 'rb') as aq:
-            sub_search_model_config = pickle.loads(aq.read())
+        # sub_search_model_config_path = model_dir / "submodel.config"
+        # with open(sub_search_model_config_path, 'rb') as aq:
+        #     sub_search_model_config = pickle.loads(aq.read())
         # model_1 = Path(ROOT_DIR) / "output" / "search_model" / "bm25"
         # model_2 = Path(ROOT_DIR) / "output" / "search_model" / "avg_n2v"
         # new_sub_search_model_config = [
@@ -122,7 +124,7 @@ class Summary:
         # ]
         # with open(sub_search_model_config_path, 'wb') as out:
         #     out.write(pickle.dumps(new_sub_search_model_config))
-        model = CompoundSearchModel.load(model_dir)
+        model = FilterSemanticTFIDFNode2VectorModel.load(model_dir)
         return model
 
     @staticmethod
