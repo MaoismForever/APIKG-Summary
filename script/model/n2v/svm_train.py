@@ -20,7 +20,7 @@ from util.path_util import PathUtil
 class SVMTrainer():
     def __init__(self):
         self.graph_data = GraphData.load(
-            str(DATA_DIR / "graph" / ("{pro}.{version}.graph".format(pro="jdk8", version="v4"))))
+            str(Path(DATA_DIR / "graph" / ("{pro}.{version}.graph".format(pro="jdk8", version="v4")))))
         model_dir_path = Path(OUTPUT_DIR) / 'svm_model'
         self.model = FilterSemanticTFIDFNode2VectorModel(name="svm", model_dir_path=model_dir_path)
         self.document_collection_path = Path(DATA_DIR) / 'doc' / 'jdk8' / 'jdk8.v4.dc'
@@ -30,8 +30,8 @@ class SVMTrainer():
         self.doc_collection = PreprocessMultiFieldDocumentCollection.create_from_doc_collection(self.processor,
                                                                                                 self.collection)
         self.pretrain_node2vec_path = PathUtil.node2vec(pro_name="jdk8", version="v4", weight="unweight")
-        self.kg_name_searcher_path = str(
-            DATA_DIR / "graph" / ("{pro}.{version}.namesearcher".format(pro="jdk8", version="v4")))
+        self.kg_name_searcher_path = str(Path(
+            DATA_DIR / "graph" / ("{pro}.{version}.namesearcher".format(pro="jdk8", version="v4"))))
 
     def train(self):
         self.model.train_from_doc_collection_with_preprocessor(self.doc_collection,
