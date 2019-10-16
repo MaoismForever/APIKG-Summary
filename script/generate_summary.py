@@ -1,7 +1,6 @@
 import json
 import pickle
 from pathlib import Path
-
 from sekg.ir.models.compound import CompoundSearchModel
 from sekg.graph.exporter.graph_data import GraphData
 from definitions import OUTPUT_DIR, ROOT_DIR

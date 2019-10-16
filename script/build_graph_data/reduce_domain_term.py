@@ -1,13 +1,11 @@
 from pathlib import Path
-import sys
-sys.path.append('/home/fdse/lvgang/APIKGSummaryV1')
-
 from sekg.ir.doc.wrapper import PreprocessMultiFieldDocumentCollection
 from sekg.ir.preprocessor.code_text import CodeDocPreprocessor
 from sekg.util.code import ConceptElementNameUtil
 from util.data_util import EntityReader
 from util.path_util import PathUtil
 from gensim.corpora.dictionary import Dictionary
+
 
 class ReduceDomainTerm:
     def __init__(self, term_save_path, operation_save_path, term_relation_save_path, linkage_save_path,
@@ -56,7 +54,6 @@ class ReduceDomainTerm:
             self.end_record_for_linkage[end] = self.end_record_for_linkage.get(end, 0) + 1
             self.start_with_r_record[start + "_" + r] = self.start_with_r_record.get(start + "_" + r, 0) + 1
             self.end_with_r_record[end + "_" + r] = self.end_with_r_record.get(end + "_" + r, 0) + 1
-            # todo: remove too long domain term or too much word domain term
             if r.startswith("mention"):
                 self.mention_time[end] = self.mention_time.get(end, 0) + 1
             if r.startswith("operation"):
@@ -205,7 +202,6 @@ class ReduceDomainTerm:
 if __name__ == "__main__":
     domain_dir = PathUtil.domain_concept_dir("JabRef-2.6", version="v1")
     domain_dir = Path(domain_dir)
-    # todo: not complete yet
     term_save_path = str(domain_dir / "terms.txt")
     operation_save_path = str(domain_dir / "operations.txt")
     term_relation_save_path = str(domain_dir / "relations.json")

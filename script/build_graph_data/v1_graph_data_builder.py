@@ -409,28 +409,5 @@ def build_v1_jdk():
     jdk_kg_builder.save(output_graph_data_path)
 
 
-def build_v1_android():
-    jdk_kg_builder = JDKKGBuilder()
-    pro_name = "android27"
-    output_graph_data_path = PathUtil.android_graph_data()
-    session = MYSQL_FACTORY.create_mysql_session_by_server_name(server_name="89Server",
-                                                                database="api_backup",
-                                                                echo=False)
-    jdk_kg_builder.import_primary_type()
-    api_id_to_node_id_map = jdk_kg_builder.import_android_from_api_table(session)
-    id_map_file_path = PathUtil.android_api_node_map()
-    with open(id_map_file_path, 'wb') as id_map_file:
-        pickle.dump(api_id_to_node_id_map, id_map_file)
-    jdk_kg_builder.save(output_graph_data_path)
-    jdk_kg_builder.init_graph_data(output_graph_data_path)
-    jdk_kg_builder.import_relation_from_jdk_table(session, api_id_to_node_id_map)
-    jdk_kg_builder.save(output_graph_data_path)
-    jdk_kg_builder.infer_extra_relation()
-    jdk_kg_builder.build_aliases()
-    jdk_kg_builder.add_source_label(pro_name)
-    jdk_kg_builder.save(output_graph_data_path)
-
-
 if __name__ == "__main__":
-    build_v1_android()
-    # build_v1_jdk()
+    build_v1_jdk()

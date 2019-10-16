@@ -1,15 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-import sys
-sys.path.append('/home/fdse/lvgang/APIKGSummaryV1')
-
-from definitions import SUPPORT_PROJECT_LIST
 from graph.builder.graph_builder import CodeGraphBuilder
 from util.path_util import PathUtil
 
 
-def build_v2_graph_for_pro(pro_name):
+def build_v2_1_graph_for_pro(pro_name):
     builder = CodeGraphBuilder()
     input_graph_data_path = PathUtil.graph_data(pro_name=pro_name, version="v2")
     print(input_graph_data_path)
@@ -25,4 +20,4 @@ def build_v2_graph_for_pro(pro_name):
 if __name__ == "__main__":
     pro_list = ['jdk8']
     for pro_name in pro_list:
-        build_v2_graph_for_pro(pro_name)
+        build_v2_1_graph_for_pro(pro_name)
