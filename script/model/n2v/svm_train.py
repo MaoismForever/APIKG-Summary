@@ -24,17 +24,15 @@ class SVMTrainer():
         version = "v4"
         self.graph_data_path = PathUtil.graph_data(pro_name, version)
         self.graph_data = GraphData.load(self.graph_data_path)
-        model_dir_path = Path(OUTPUT_DIR) / 'svm_model'
-        self.model = FilterSemanticTFIDFNode2VectorModel(name="svm", model_dir_path=model_dir_path)
-        self.document_collection_path = Path(DATA_DIR) / 'doc' / pro_name / 'jdk8.v4.dc'
-        self.collection = MultiFieldDocumentCollection.load(
-            str(self.document_collection_path))
+        self.model_dir_path = str(Path(OUTPUT_DIR) / "sim_models" / "jdk8" / "v4" / "svm")
+        self.model = FilterSemanticTFIDFNode2VectorModel(name="svm", model_dir_path=self.model_dir_path)
+        self.document_collection_path = PathUtil.doc(pro_name, version)
+        self.collection = MultiFieldDocumentCollection.load(str(self.document_collection_path))
         self.processor = Preprocessor()
         self.doc_collection = PreprocessMultiFieldDocumentCollection.create_from_doc_collection(self.processor,
                                                                                                 self.collection)
         self.pretrain_node2vec_path = PathUtil.node2vec(pro_name="jdk8", version=version, weight="unweight")
-        self.kg_name_searcher_path = str(Path(
-            DATA_DIR) / "graph" / ("{pro}.{version}.namesearcher".format(pro=pro_name, version="v4")))
+        self.kg_name_searcher_path = PathUtil.name_searcher(pro_name, version)
         self.doc_sim_model_path = PathUtil.sim_model(pro_name=pro_name, version=version, model_type="avg_w2v")
 
     def train(self):
@@ -46,7 +44,7 @@ class SVMTrainer():
                                                                doc_sim_model_path=self.doc_sim_model_path,
                                                                doc_sim_model_class=AVGW2VFLModel
                                                                )
-        self.model.save(str(Path(OUTPUT_DIR) / "sim_models" / "jdk8" / "v4" / "svm"))
+        self.model.save(self.model_dir_path)
 
 
 if __name__ == '__main__':
