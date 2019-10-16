@@ -159,9 +159,12 @@ class Summary:
         for item in sorted_method_and_sentence_ids:
             self.sorted_method_and_sentence_id_dict[item.doc_id] = number
             number += 1
-        print(sorted_method_and_sentence_ids)
+        print(self.sorted_method_and_sentence_id_dict)
+        print("#"*20)
+        print(self.class_or_method_2_sentence_ids)
         index = 0
         for class_id in list(class_id_2_method_ids.keys()):
+            print(class_id)
             all_class_2_summary[index] = []
             class_node = self.graph_data.find_nodes_by_ids(class_id)
             class_name = class_node[0]['properties']['qualified_name']
