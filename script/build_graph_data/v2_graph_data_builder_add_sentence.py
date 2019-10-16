@@ -1,9 +1,11 @@
 import sys
 from pathlib import Path
+
+from sekg.ir.doc.wrapper import MultiFieldDocumentCollection
+
 from definitions import OUTPUT_DIR
 from script.fast_text.fasttext_classifier import FastTextClassifier
 from sekg.graph.exporter.graph_data import GraphData
-from util.graph_load_util import GraphLoadUtil
 from util.import_extract_result_2_graph_data import ExtractResultImport
 from util.path_util import PathUtil
 
@@ -11,7 +13,8 @@ classifier = FastTextClassifier()
 
 
 def build_v2_graph_for_pro(pro_name):
-    collection = GraphLoadUtil.load_doc(pro_name, "v1")
+    document_collection_path = PathUtil.doc(pro_name=pro_name, version="v1")
+    collection: MultiFieldDocumentCollection = MultiFieldDocumentCollection.load(document_collection_path)
     docs = collection.get_document_list()
 
     graph_data_path = PathUtil.graph_data(pro_name=pro_name, version="v1")

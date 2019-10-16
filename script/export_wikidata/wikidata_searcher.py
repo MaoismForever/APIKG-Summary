@@ -17,14 +17,6 @@ from sekg.util.url_util import URLUtil
 from sekg.util.annotation import catch_exception
 from sekg.wiki.WikiDataItem import WikiDataItem
 
-
-# if sys.platform == 'win32':
-#     loop = asyncio.ProactorEventLoop()
-#     asyncio.set_event_loop(loop)
-
-# import wikipedia
-
-
 class AsyncWikiSearcher:
     API_URL = 'https://www.wikidata.org/w/api.php'
     WIKI_PEDIA_URL = 'https://en.wikipedia.org/w/api.php'
