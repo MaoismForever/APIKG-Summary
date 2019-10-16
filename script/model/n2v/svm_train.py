@@ -38,3 +38,8 @@ class SVMTrainer():
                                                                pretrain_node2vec_path=self.pretrain_node2vec_path,
                                                                kg_name_searcher_path=self.kg_name_searcher_path)
         self.model.save(str(OUTPUT_DIR / "sim_models" / "jdk8" / "v4" / "svm"))
+
+
+if __name__ == '__main__':
+    svm = SVMTrainer()
+    svm.train()
