@@ -19,7 +19,7 @@ class Summary:
     def __init__(self):
         graph_data_path = PathUtil.graph_data(pro_name="jdk8", version="v4")
         self.graph_data: GraphData = GraphData.load(graph_data_path)
-        model_dir = Path(OUTPUT_DIR) / "search_model" / "svm"
+        model_dir = Path(OUTPUT_DIR) / "sim_models" / "jdk8" / "v4" / "svm"
         self.model = self.create_search_model(model_dir)
         print("It's ok for init!")
 
@@ -351,7 +351,9 @@ class Summary:
         else:
             sentence_num = len(sentence_rank_list)
         for num in range(sentence_num):
-            sentence_name = self.graph_data.find_nodes_by_ids(class_or_method_sentence_dict_rank[sentence_rank_list[num]])[0]['properties']['sentence_name']
+            sentence_name = \
+            self.graph_data.find_nodes_by_ids(class_or_method_sentence_dict_rank[sentence_rank_list[num]])[0][
+                'properties']['sentence_name']
             class_or_method_2_sentence[class_or_method_name]['sentence'].append(sentence_name)
         return class_or_method_2_sentence
 
