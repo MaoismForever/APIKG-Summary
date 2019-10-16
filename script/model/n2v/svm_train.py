@@ -45,7 +45,7 @@ class SVMTrainer():
                                                                doc_sim_model_path=self.doc_sim_model_path,
                                                                doc_sim_model_class=AVGW2VFLModel
                                                                )
-        self.model.save(str(OUTPUT_DIR / "sim_models" / "jdk8" / "v4" / "svm"))
+        self.model.save(OUTPUT_DIR / "sim_models" / "jdk8" / "v4" / "svm")
 
 
 if __name__ == '__main__':
