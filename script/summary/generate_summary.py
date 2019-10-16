@@ -15,9 +15,9 @@ class Summary:
     sort_sentence_ids = []
 
     def __init__(self):
-        graph_data_path = PathUtil.graph_data(pro_name="jdk8", version="v3")
+        graph_data_path = PathUtil.graph_data(pro_name="jdk8", version="v4")
         self.graph_data: GraphData = GraphData.load(graph_data_path)
-        model_dir = Path(OUTPUT_DIR) / "search_model" / "compound_bm25+avg_n2v"
+        model_dir = Path(OUTPUT_DIR) / "search_model" / "svm"
         self.model = self.create_search_model(model_dir)
         print("It's ok for init!")
 
@@ -114,14 +114,14 @@ class Summary:
         sub_search_model_config_path = model_dir / "submodel.config"
         with open(sub_search_model_config_path, 'rb') as aq:
             sub_search_model_config = pickle.loads(aq.read())
-        model_1 = Path(ROOT_DIR) / "output" / "search_model" / "bm25"
-        model_2 = Path(ROOT_DIR) / "output" / "search_model" / "avg_n2v"
-        new_sub_search_model_config = [
-            (model_1, sub_search_model_config[0][1], sub_search_model_config[0][2], sub_search_model_config[0][3]),
-            (model_2, sub_search_model_config[1][1], sub_search_model_config[1][2], sub_search_model_config[1][3]),
-        ]
-        with open(sub_search_model_config_path, 'wb') as out:
-            out.write(pickle.dumps(new_sub_search_model_config))
+        # model_1 = Path(ROOT_DIR) / "output" / "search_model" / "bm25"
+        # model_2 = Path(ROOT_DIR) / "output" / "search_model" / "avg_n2v"
+        # new_sub_search_model_config = [
+        #     (model_1, sub_search_model_config[0][1], sub_search_model_config[0][2], sub_search_model_config[0][3]),
+        #     (model_2, sub_search_model_config[1][1], sub_search_model_config[1][2], sub_search_model_config[1][3]),
+        # ]
+        # with open(sub_search_model_config_path, 'wb') as out:
+        #     out.write(pickle.dumps(new_sub_search_model_config))
         model = CompoundSearchModel.load(model_dir)
         return model
 
