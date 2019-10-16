@@ -20,8 +20,8 @@ from util.path_util import PathUtil
 
 class SVMTrainer():
     def __init__(self):
-        pro_name="jdk8"
-        version="v4"
+        pro_name = "jdk8"
+        version = "v4"
         self.graph_data = GraphData.load(
             str(Path(DATA_DIR) / "graph" / ("{pro}.{version}.graph".format(pro=pro_name, version="v4"))))
         model_dir_path = Path(OUTPUT_DIR) / 'svm_model'
@@ -35,7 +35,8 @@ class SVMTrainer():
         self.pretrain_node2vec_path = PathUtil.node2vec(pro_name="jdk8", version="v4", weight="unweight")
         self.kg_name_searcher_path = str(Path(
             DATA_DIR) / "graph" / ("{pro}.{version}.namesearcher".format(pro=pro_name, version="v4")))
-        self.doc_sim_model_path = PathUtil.best_text_sim_model(pro_name=pro_name, version=version)
+        self.doc_sim_model_path = PathUtil.sim_model(pro_name=pro_name, version="v4", model_type="avg_w2v")
+        # self.doc_sim_model_path = PathUtil.best_text_sim_model(pro_name=pro_name, version=version)
 
     def train(self):
         self.model.train_from_doc_collection_with_preprocessor(self.doc_collection,
