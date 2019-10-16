@@ -154,6 +154,8 @@ class Summary:
             self.class_or_method_2_sentence_ids[class_or_method_id] = self.get_sentence_from_class_or_method(
                 class_or_method_id)
             method_and_sentence_ids += self.class_or_method_2_sentence_ids[class_or_method_id]
+        print(method_and_sentence_ids)
+        print(len(method_and_sentence_ids))
         sorted_method_and_sentence_ids = self.model.search(query, len(method_and_sentence_ids), method_and_sentence_ids)
         number = 1
         for item in sorted_method_and_sentence_ids:
