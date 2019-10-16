@@ -161,7 +161,6 @@ class Summary:
             number += 1
         index = 0
         for class_id in list(class_id_2_method_ids.keys()):
-            print(class_id)
             all_class_2_summary[index] = []
             class_node = self.graph_data.find_nodes_by_ids(class_id)
             class_name = class_node[0]['properties']['qualified_name']
