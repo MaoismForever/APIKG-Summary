@@ -12,7 +12,7 @@
   {
     "server_name": "87Neo4jApiSummaryJdk",
     "server_id": 2,
-    "host": "localhost",
+    "host": "10.221.141.87",
     "user": "neo4j",
     "password": "123456",
     "http_port": 15474,
