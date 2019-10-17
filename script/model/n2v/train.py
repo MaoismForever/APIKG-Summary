@@ -32,7 +32,7 @@ def train_weight_graph_data(graph_data_output_dir, node2vec_output_dir, pro_name
         node2vec_output_dir / "{pro}.{version}.weight.rwp".format(pro=pro_name, version=version))
     trainer = GraphNode2VecTrainer(
         GraphData.load(str(graph_data_output_dir / ("{pro}.{version}.graph".format(pro=pro_name, version=version)))))
-    trainer.init_graph(weight=True)
+    trainer.init_weight_graph(weight=True)
     trainer.generate_random_path(rw_path_store_path=graph_random_walk_path)
     graph2vec_model_path = str(
         node2vec_output_dir / "{pro}.{version}.weight.node2vec".format(pro=pro_name, version=version))
