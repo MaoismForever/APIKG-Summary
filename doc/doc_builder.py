@@ -393,7 +393,7 @@ class GraphNodeDocumentBuilder:
                 descriptions.append(doc.get_doc_text_by_field("out_relations"))
                 descriptions.append(doc.get_doc_text_by_field("description"))
             else:
-                descriptions.append(doc.get_doc_text_by_field("sentence_text"))
+                descriptions.append(doc.get_doc_text_by_field("short_description_sentences"))
                 descriptions.append(doc.get_doc_text_by_field("out_relations"))
 
             description = "\n".join([text for text in descriptions if text])
@@ -407,7 +407,7 @@ class GraphNodeDocumentBuilder:
         return sub_doc_collection
 
     def build_doc_for_sentence(self, node_info):
-        self.doc_collection.add_field_to_doc(doc_id=node_info.node_id, field_name="sentence_text",
+        self.doc_collection.add_field_to_doc(doc_id=node_info.node_id, field_name="short_description_sentences",
                                              value=node_info.properties["sentence_name"])
         self.add_text_for_out_relation(node_info.node_id)
         self.add_text_for_in_relation(node_info.node_id)

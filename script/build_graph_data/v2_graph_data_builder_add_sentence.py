@@ -21,6 +21,8 @@ def build_v2_graph_for_pro(pro_name):
     graph_data: GraphData = GraphData.load(graph_data_path)
     new_graph_data_path = PathUtil.graph_data(pro_name=pro_name, version="v2")
     res = ExtractResultImport(graph_data, new_graph_data_path, 2)
+    filter_sentence_path = str(
+        Path(OUTPUT_DIR) / "graph" / "jdk8" / "filter_data" / "filter_sentence.txt")
     for doc in docs:
         api_id = doc.get_document_id()
         short_descs = doc.get_doc_text_by_field('short_description_sentences')
@@ -28,8 +30,6 @@ def build_v2_graph_for_pro(pro_name):
             label = list(classifier.predict(short_desc))[0]
             if label == '__label__0':
                 print(short_desc)
-                filter_sentence_path = str(
-                    Path(OUTPUT_DIR) / "graph" / "jdk8" / "filter_data" / "filter_sentence.txt")
                 with open(filter_sentence_path, "a") as f:
                     f.write(short_desc)
                     f.write("\n")
