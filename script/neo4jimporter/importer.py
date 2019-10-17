@@ -18,7 +18,6 @@ if __name__ == "__main__":
         importer = Neo4jImporter(accessor)
 
         graph_data_path = PathUtil.graph_data(pro_name=pro_name, version="v4")
-        print("开始导入%s里的数据" % pro_name)
         graph_data: GraphData = GraphData.load(graph_data_path)
-        print("导入%s里的数据成功" % pro_name)
+        print("start import data of {} into neo4j".format(pro_name))
         importer.import_all_graph_data(graph_data)
