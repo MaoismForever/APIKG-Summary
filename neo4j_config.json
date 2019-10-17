@@ -8,5 +8,15 @@
     "http_port": 7474,
     "https_port": 7473,
     "bolt_port": 7687
+  },
+  {
+    "server_name": "87Neo4jApiSummaryJdk",
+    "server_id": 2,
+    "host": "localhost",
+    "user": "neo4j",
+    "password": "123456",
+    "http_port": 74740,
+    "https_port": 74730,
+    "bolt_port": 76870
   }
 ]
