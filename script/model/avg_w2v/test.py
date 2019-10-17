@@ -1,20 +1,13 @@
 from sekg.graph.exporter.graph_data import GraphData
-from sekg.ir.models.bm25 import BM25Model
-from sekg.ir.models.compound import CompoundSearchModel
-from sekg.ir.models.n2v.svm.avg_n2v import AVGNode2VectorModel
-from sekg.ir.models.n2v.svm.filter_semantic_tfidf_n2v import FilterSemanticTFIDFNode2VectorModel
-
-from definitions import OUTPUT_DIR
-from pathlib import Path
+from sekg.ir.models.avg_w2v import AVGW2VFLModel
 
 from util.path_util import PathUtil
 
 if __name__ == '__main__':
     pro_name = "jdk"
     version = "v4"
-    compound_model_name = "compound_{base_model}+{extra_model}".format(base_model="bm25", extra_model="avg_n2v")
-    model_dir_path = PathUtil.sim_model(pro_name=pro_name, version=version, model_type=compound_model_name)
-    model = CompoundSearchModel.load(model_dir_path)
+    model_dir_path = PathUtil.sim_model(pro_name=pro_name, version=version, model_type="avg_n2v")
+    model = AVGW2VFLModel.load(model_dir_path)
     graph_data_path = PathUtil.graph_data(pro_name=pro_name, version=version)
     graph_data: GraphData = GraphData.load(graph_data_path)
     valid_class_ids = graph_data.get_node_ids_by_label("class")

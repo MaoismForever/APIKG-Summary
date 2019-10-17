@@ -30,7 +30,6 @@ def train_model(pro_name, version, weight):
     kg_name_searcher_path = PathUtil.name_searcher(pro_name=pro_name, version=version)
 
     model_dir_path = PathUtil.sim_model(pro_name=pro_name, version=version, model_type="avg_n2v")
-    print(model_dir_path)
     model = AVGNode2VectorModel.train(model_dir_path=model_dir_path,
                                       doc_collection=doc_collection,
                                       embedding_size=embedding_size,
