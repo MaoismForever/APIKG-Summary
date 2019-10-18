@@ -43,7 +43,7 @@ def train_weight_graph_data(graph_data_output_dir, node2vec_output_dir, pro_name
 if __name__ == "__main__":
 
     pro_list = SUPPORT_PROJECT_LIST
-    versions = ["v3", "v4"]
+    versions = ["v3"]
     for version in versions:
         for pro_name in pro_list:
             train_node2vec(pro_name, version)

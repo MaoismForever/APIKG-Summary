@@ -49,7 +49,7 @@ def train_model(pro_name, version, first_model_config, second_model_config):
 
 if __name__ == '__main__':
     pro_list = SUPPORT_PROJECT_LIST
-    versions = ["v3", "v4"]
+    versions = ["v3"]
     for version in versions:
         for pro_name in pro_list:
             model_compound_list = [
