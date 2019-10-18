@@ -13,6 +13,7 @@ if __name__ == '__main__':
     graph_data: GraphData = GraphData.load(graph_data_path)
     valid_class_ids = graph_data.get_node_ids_by_label("class")
     valid_method_ids = graph_data.get_node_ids_by_label("method")
+    valid_method_ids.update(graph_data.get_node_ids_by_label("base override method"))
     valid_sentence_ids = graph_data.get_node_ids_by_label("sentence")
     while True:
         query = input("please input query: ")

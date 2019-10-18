@@ -17,7 +17,7 @@ def build_doc(pro_name, version):
 if __name__ == '__main__':
 
     pro_list = ["jdk8"]
-    versions = ["v4"]
+    versions = ["v3", "v4"]
 
     for pro_name in pro_list:
         for version in versions:

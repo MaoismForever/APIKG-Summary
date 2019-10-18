@@ -257,7 +257,7 @@ class CodeGraphBuilder:
         with Path(str(fusion_temp_result_dir / "record.json")).open("w", encoding="utf-8") as f:
             json.dump(record, f, indent=4)
 
-        fusion.graph_data.add_label_to_all(pro_name)
+        # fusion.graph_data.add_label_to_all(pro_name)
         fusion.save(output_graph_data_path)
         print("end adding wikidata knowledge for %s" % pro_name)
 

@@ -12,16 +12,14 @@ from sekg.ir.doc.wrapper import PreprocessMultiFieldDocumentCollection, MultiFie
 from sekg.ir.models.n2v.svm.filter_semantic_tfidf_n2v import FilterSemanticTFIDFNode2VectorModel
 from sekg.ir.models.tf_idf import TFIDFModel
 from sekg.ir.models.avg_w2v import AVGW2VFLModel
-from definitions import OUTPUT_DIR, DATA_DIR
+from definitions import OUTPUT_DIR, DATA_DIR, SUPPORT_PROJECT_LIST
 from sekg.ir.preprocessor.base import Preprocessor
 
 from util.path_util import PathUtil
 
 
 class SVMTrainer():
-    def __init__(self):
-        pro_name = "jdk8"
-        version = "v4"
+    def __init__(self, pro_name, version):
         self.model_dir_path = str(Path(OUTPUT_DIR) / "sim_models" / "jdk8" / "v4" / "svm")
         self.model = FilterSemanticTFIDFNode2VectorModel(name="svm", model_dir_path=self.model_dir_path)
         self.document_collection_path = PathUtil.doc(pro_name, version)
@@ -44,5 +42,9 @@ class SVMTrainer():
 
 
 if __name__ == '__main__':
-    svm = SVMTrainer()
-    svm.train()
+    pro_list = SUPPORT_PROJECT_LIST
+    versions = ["v3", "v4"]
+    for version in versions:
+        for pro_name in pro_list:
+            svm = SVMTrainer(pro_name, version)
+            svm.train()

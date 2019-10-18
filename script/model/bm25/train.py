@@ -25,7 +25,7 @@ def train_model(pro_name, version):
 
 if __name__ == '__main__':
     pro_list = SUPPORT_PROJECT_LIST
-    versions = ["v4"]
+    versions = ["v3", "v4"]
     for version in versions:
         for pro_name in pro_list:
             train_model(pro_name, version)
