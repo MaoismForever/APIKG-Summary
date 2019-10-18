@@ -7,9 +7,9 @@ from pathlib import Path
 from util.path_util import PathUtil
 
 if __name__ == '__main__':
-    model_dir_path = str(Path(OUTPUT_DIR) / "sim_models" / "jdk8" / "v4" / "svm")
+    model_dir_path = str(Path(OUTPUT_DIR) / "sim_models" / "jdk8" / "v3" / "svm")
     model = FilterSemanticTFIDFNode2VectorModel.load(model_dir_path)
-    graph_data_path = PathUtil.graph_data(pro_name="jdk8", version="v4")
+    graph_data_path = PathUtil.graph_data(pro_name="jdk8", version="v3")
     graph_data: GraphData = GraphData.load(graph_data_path)
     valid_class_ids = graph_data.get_node_ids_by_label("class")
     valid_method_ids = graph_data.get_node_ids_by_label("method")
