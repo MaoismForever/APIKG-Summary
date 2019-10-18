@@ -18,4 +18,5 @@ def train_name_searcher(pro_name, version):
 
 
 if __name__ == "__main__":
+    train_name_searcher(pro_name="jdk8", version="v3")
     train_name_searcher(pro_name="jdk8", version="v4")
