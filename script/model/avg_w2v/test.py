@@ -6,7 +6,7 @@ from util.path_util import PathUtil
 if __name__ == '__main__':
     pro_name = "jdk8"
     version = "v3_1"
-    model_dir_path = PathUtil.sim_model(pro_name=pro_name, version=version, model_type="avg_n2v")
+    model_dir_path = PathUtil.sim_model(pro_name=pro_name, version=version, model_type="avg_w2v")
     model = AVGW2VFLModel.load(model_dir_path)
     graph_data_path = PathUtil.graph_data(pro_name=pro_name, version=version)
     graph_data: GraphData = GraphData.load(graph_data_path)
