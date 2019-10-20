@@ -3,6 +3,7 @@ from pathlib import Path
 from sekg.ir.doc.wrapper import PreprocessMultiFieldDocumentCollection, MultiFieldDocumentCollection
 from sekg.ir.models.n2v.svm.avg_n2v import AVGNode2VectorModel
 from sekg.ir.preprocessor.base import Preprocessor
+from sekg.ir.preprocessor.code_text import CodeDocPreprocessor
 from sekg.util.annotation import catch_exception
 
 from definitions import SUPPORT_PROJECT_LIST, DATA_DIR
@@ -15,7 +16,7 @@ def train_model(pro_name, version, weight):
     # document_collection_path = Path(DATA_DIR) / 'doc' / 'jdk8' / 'jdk8.v4.dc'
     document_collection_path = PathUtil.doc(pro_name, version)
     collection = MultiFieldDocumentCollection.load(str(document_collection_path))
-    processor = Preprocessor()
+    processor = CodeDocPreprocessor()
     doc_collection = PreprocessMultiFieldDocumentCollection.create_from_doc_collection(processor, collection)
 
     graph_data_path = PathUtil.graph_data(pro_name=pro_name, version=version)
