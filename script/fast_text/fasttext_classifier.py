@@ -83,7 +83,7 @@ class FastTextClassifier:
 
 if __name__ == "__main__":
     classifier = FastTextClassifier()
-    classifier.predict("Always returns null.")
+    # print(classifier.predict("Invoked when a component gains the keyboard focus."))
     classifier.predict("()")
     classifier.predict("Returns the authorization")
     # classifier.train_model()
