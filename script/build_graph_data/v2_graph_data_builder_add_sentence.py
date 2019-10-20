@@ -27,6 +27,8 @@ def build_v2_graph_for_pro(pro_name):
     filter_sentence_path = str(data_dir / "filter_sentence.txt")
 
     pat = re.compile('<[^>]+>', re.S)
+
+    print("start to add sentences...")
     for id in graph_data.get_node_ids():
         node_info = graph_data.get_node_info_dict(id)
         short_description = node_info["properties"].get("short_description", "")
@@ -51,7 +53,7 @@ def build_v2_graph_for_pro(pro_name):
                 continue
             else:
                 res.add_sentence_relation(short_desc, id)
-
+    res.save_new_graph_data()
     # for doc in docs:
     #     api_id = doc.get_document_id()
     #     short_descs = doc.get_doc_text_by_field('short_description_sentences')
@@ -65,7 +67,7 @@ def build_v2_graph_for_pro(pro_name):
     #             continue
     #         else:
     #             res.add_sentence_relation(short_desc, api_id)
-    res.save_new_graph_data()
+    # res.save_new_graph_data()
 
 
 if __name__ == '__main__':
