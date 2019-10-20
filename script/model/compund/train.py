@@ -16,7 +16,7 @@ from util.path_util import PathUtil
 
 @catch_exception
 def train_model(pro_name, version, first_model_config, second_model_config):
-    document_collection_path = PathUtil.doc("jdk8", "v4")
+    document_collection_path = PathUtil.doc(pro_name, version)
     collection = MultiFieldDocumentCollection.load(str(document_collection_path))
     processor = CodeDocPreprocessor()
     doc_collection = PreprocessMultiFieldDocumentCollection.create_from_doc_collection(processor, collection)
