@@ -57,6 +57,12 @@ class PreprocessData:
                 str_list.append(token)
         return " ".join(str_list)
 
+    def clean_data(self, sentence):
+        text = sentence.lower()
+        str_rm_sign = self.remove_sign(text)
+        str_rm_stop = self.remove_stop_words(str_rm_sign)
+        return str_rm_stop
+
     def fast_text_data(self, sentence_list):
         """
         change sentence_list into fast_text format
@@ -65,9 +71,8 @@ class PreprocessData:
         """
         data_list = []
         for item in sentence_list:
-            str_rm_sign = self.remove_sign(item["text"])
-            str_rm_stop = self.remove_stop_words(str_rm_sign)
-            data_list.append("__label__" + str(item["vote_type"]) + " , " + str_rm_stop)
+            clean_text = self.clean_data(item["text"])
+            data_list.append("__label__" + str(item["vote_type"]) + " , " + clean_text)
         random.shuffle(data_list)
         return data_list
 

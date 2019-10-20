@@ -45,7 +45,7 @@ class SVMTrainer():
 
 if __name__ == '__main__':
     pro_list = SUPPORT_PROJECT_LIST
-    versions = ["v3", "v4"]
+    versions = ["v3_1"]
     for version in versions:
         for pro_name in pro_list:
             svm = SVMTrainer(pro_name, version)

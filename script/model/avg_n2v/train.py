@@ -43,7 +43,7 @@ def train_model(pro_name, version, weight):
 if __name__ == '__main__':
     pro_list = SUPPORT_PROJECT_LIST
     weights = ["unweight"]
-    versions = ["v3"]
+    versions = ["v3_1"]
     for version in versions:
         for pro_name in pro_list:
             for weight in weights:
