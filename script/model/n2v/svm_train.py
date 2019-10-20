@@ -30,15 +30,15 @@ class SVMTrainer():
                                                                                                 self.collection)
         self.pretrain_node2vec_path = PathUtil.node2vec(pro_name=pro_name, version=version, weight="unweight")
         self.kg_name_searcher_path = PathUtil.name_searcher(pro_name, version)
-        # self.doc_sim_model_path = PathUtil.sim_model(pro_name=pro_name, version=version, model_type="avg_w2v")
-        self.doc_sim_model_path = PathUtil.sim_model(pro_name=pro_name, version=version, model_type="bm25")
+        self.doc_sim_model_path = PathUtil.sim_model(pro_name=pro_name, version=version, model_type="avg_w2v")
+        # self.doc_sim_model_path = PathUtil.sim_model(pro_name=pro_name, version=version, model_type="bm25")
 
     def train(self):
         self.model.train_from_doc_collection_with_preprocessor(self.doc_collection,
                                                                pretrain_node2vec_path=self.pretrain_node2vec_path,
                                                                kg_name_searcher_path=self.kg_name_searcher_path,
                                                                doc_sim_model_path=self.doc_sim_model_path,
-                                                               doc_sim_model_class=BM25Model
+                                                               doc_sim_model_class=AVGW2VFLModel
                                                                )
         self.model.save(self.model_dir_path)
 
