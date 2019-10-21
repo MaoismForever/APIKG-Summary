@@ -482,9 +482,8 @@ class GenericKGFusion:
         i = 0
         for wd_item_id in wd_item_ids:
             i += 1
+            print(i, ": ", wd_item_id)
             self.add_wikidata_item(term_wikiitems[wd_item_id])
-            if i == 50:
-                break
         self.build_relation_between_wikidata_node_in_graph(term_wikiitems)
 
     def build_relation_between_wikidata_node_in_graph(self, term_wikiitems):
