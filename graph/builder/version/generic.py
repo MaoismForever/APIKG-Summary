@@ -321,11 +321,11 @@ class GenericKGFusion:
         record = []
         valid_domain_id_set = self.graph_data.get_node_ids_by_label(DomainConstant.LABEL_DOMAIN_TERM)
         i = 0
-        valid_wiki_id_set = self.graph_data.get_node_ids_by_label(WikiDataConstance.LABEL_WIKIDATA)
+        valid_wiki_id_set = self.graph_data.get_node_ids_by_label("wikidata")
         valid_wiki_index = np.array(list(self.w2v_model.preprocess_doc_collection.doc_id_set_2_doc_index_set(
             valid_wiki_id_set)))
         doc_model = self.w2v_model.avg_w2v_model_field_map["doc"]
-        print("valid_doc_index size: ", valid_wiki_index.size)
+        print("valid_wiki_index size: ", valid_wiki_index.size)
 
         for node_id in valid_domain_id_set:
             try:
