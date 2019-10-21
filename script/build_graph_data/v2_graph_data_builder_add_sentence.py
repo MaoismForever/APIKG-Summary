@@ -48,6 +48,7 @@ def build_v2_graph_for_pro(pro_name):
             # windows
             # if label == '__label__1':
             # linux
+            print(label)
             if label == "0":
                 print(short_desc)
                 with open(filter_sentence_path, "a", encoding='utf-8') as f:
