@@ -234,6 +234,8 @@ class CodeGraphBuilder:
 
         fusion = GenericKGFusion()
         fusion.init_graph_data(input_graph_data_path)
+        fusion.init_wd_from_cache(title_save_path=generic_title_search_cache_path,
+                                  item_save_path=generic_wikidata_item_cache_path)
         fusion.add_all_wiki_nodes()
         fusion.save(output_graph_data_path)
         #
