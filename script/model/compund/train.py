@@ -1,9 +1,11 @@
 from pathlib import Path
 
 from sekg.ir.doc.wrapper import PreprocessMultiFieldDocumentCollection, MultiFieldDocumentCollection
+from sekg.ir.models.avg_w2v import AVGW2VFLModel
 from sekg.ir.models.bm25 import BM25Model
 from sekg.ir.models.compound import CompoundSearchModel
 from sekg.ir.models.n2v.svm.avg_n2v import AVGNode2VectorModel
+from sekg.ir.models.n2v.svm.filter_semantic_tfidf_n2v import FilterSemanticTFIDFNode2VectorModel
 from sekg.ir.models.n2v.svm.tfidf_n2v import TFIDFNode2VectorModel
 from sekg.ir.models.tf_idf import TFIDFModel
 from sekg.ir.preprocessor.base import Preprocessor
@@ -54,7 +56,7 @@ if __name__ == '__main__':
         for pro_name in pro_list:
             model_compound_list = [
                 # [("tfidf", TFIDFModel, 0.6), ("tfidf_n2v", TFIDFNode2VectorModel, 0.4)],
-                [("bm25", BM25Model, 0.6), ("avg_n2v", AVGNode2VectorModel, 0.4)]
+                [("avg_w2v", AVGW2VFLModel, 0.6), ("svm", FilterSemanticTFIDFNode2VectorModel, 0.4)]
 
             ]
             for model_compound_info in model_compound_list:
