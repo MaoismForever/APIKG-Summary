@@ -111,7 +111,7 @@ class ExtractResultImport:
                                      relationType=relation_name)
 
     @catch_exception
-    def add_sentence_relation(self, sentence, api, relation_name="has sentence"):
+    def add_sentence_relation(self, sentence, api, sentence_type,relation_name="has sentence"):
         """
         :param relation_name:关系名
         :param sentence: 句子
@@ -119,7 +119,7 @@ class ExtractResultImport:
         :return:
         """
         node_properties = {"added_in_version": self.added_in_version,
-                           SentenceConstant.PRIMARY_PROPERTY_NAME: sentence}
+                           SentenceConstant.PRIMARY_PROPERTY_NAME: sentence,"type":sentence_type}
         sentence_node_id = self.graph_data.add_node(self.sentence_info_label, node_properties,
                                                     primary_property_name=SentenceConstant.PRIMARY_PROPERTY_NAME)
 

@@ -48,14 +48,14 @@ def build_v2_graph_for_pro(pro_name):
             # windows
             # if label == '__label__1':
             # linux
-            if label == "1":
+            if label == "0":
                 print(short_desc)
                 with open(filter_sentence_path, "a", encoding='utf-8') as f:
                     f.write(short_desc)
                     f.write("\n")
                 continue
             else:
-                res.add_sentence_relation(short_desc, id)
+                res.add_sentence_relation(short_desc, id, int(label))
     res.save_new_graph_data()
     # for doc in docs:
     #     api_id = doc.get_document_id()
