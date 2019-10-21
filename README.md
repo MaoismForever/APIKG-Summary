@@ -20,7 +20,7 @@ graph builder for generating graph
 - script:  
 scripts for building documents, building graph, training model, generating summary and importing graph data into neo4j. You can easily find by their name.  
 - util:   
-some general tool class
+some general tool classes
 
 ## Quickstart
 Our project consists of three main parts: build api graph, train search model and generate apisummary.  
