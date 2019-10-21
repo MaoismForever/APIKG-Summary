@@ -320,34 +320,33 @@ class GenericKGFusion:
         """
         record = []
         valid_domain_id_set = self.graph_data.get_node_ids_by_label(DomainConstant.LABEL_DOMAIN_TERM)
-        term_wikiitems = self.fetcher.item_cache
-        term_wikipedia = self.wikipedia_cache
         i = 0
-        valid_doc_index = np.array(list(self.w2v_model.preprocess_doc_collection.doc_id_set_2_doc_index_set(
-            valid_domain_id_set)))
+        valid_wiki_id_set = self.graph_data.get_node_ids_by_label(WikiDataConstance.LABEL_WIKIDATA)
+        valid_wiki_index = np.array(list(self.w2v_model.preprocess_doc_collection.doc_id_set_2_doc_index_set(
+            valid_wiki_id_set)))
         doc_model = self.w2v_model.avg_w2v_model_field_map["doc"]
-        print("valid_doc_index size: ", valid_doc_index.size)
-        for key, wikiitem in term_wikiitems.items():
-            i += 1
+        print("valid_doc_index size: ", valid_wiki_index.size)
+
+        for node_id in valid_domain_id_set:
             try:
-                wiki_text = ""
-                wikipedia_context = term_wikipedia.get(key, [])
-                if wikipedia_context:
-                    wiki_text = " ".join([context["context"] for context in wikipedia_context])
-                if not wiki_text:
-                    relation_text = self.generate_relations_text(wikiitem, term_wikiitems)
-                    description = wikiitem.get_en_description()
-                    en_name = wikiitem.get_en_name()
-                    en_aliases = wikiitem.get_en_aliases()
-                    wiki_text = " ".join([en_name, " ".join(en_aliases), relation_text, description])
-                wiki_words = self.w2v_model.preprocessor.clean(wiki_text)
+                node_json = self.graph_data.get_node_info_dict(node_id=node_id)
+                if not node_json:
+                    continue
+                node_properties = node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES]
+                lemma = node_properties[PropertyConstant.LEMMA]
+                alias_set = node_properties[PropertyConstant.ALIAS]
+                term_name=node_properties["term_name"]
+                alias_set.add(lemma)
+                alias_set.add(term_name)
+                text=" ".join(list(alias_set))
+                wiki_words = self.w2v_model.preprocessor.clean(text)
                 wiki_vec = self.w2v_model.get_avg_w2v_vec(wiki_words)
                 score_vector = (doc_model.similar_by_vector(wiki_vec, topn=None) + 1) / 2
                 over_thred = np.where(score_vector > 0.8)
-                top_domain_valid = np.intersect1d(over_thred, valid_doc_index)
-                if top_domain_valid.size:
-                    print("number {}:{} ,Done!".format(i, key))
-                score_vector = score_vector[top_domain_valid]
+                top_wiki_valid = np.intersect1d(over_thred, valid_wiki_index)
+                if top_wiki_valid.size:
+                    print("number {}:{} ,Done!".format(i, node_id))
+                score_vector = score_vector[top_wiki_valid]
                 sort_index = np.argsort(-score_vector)
                 score_vector = score_vector[sort_index]
                 sorted_index_scores = np.array((sort_index, score_vector)).T
@@ -359,25 +358,23 @@ class GenericKGFusion:
                         break
                     if entity_document is None:
                         continue
-                    document_id = entity_document.get_document_id()
+                    wiki_id = entity_document.get_document_id()
                     rank += 1
-                    retrieval_results.append((document_id, score))
-                for id, score in retrieval_results:
-                    domain_node_json = self.graph_data.get_node_info_dict(id)
+                    retrieval_results.append((wiki_id, score))
+
+                for wiki_id, score in retrieval_results:
+                    wiki_node_json = self.graph_data.get_node_info_dict(wiki_id)
                     record.append({
-                        "name": wikiitem.get_en_name(),
-                        "alias": wikiitem.get_en_aliases(),
-                        "description": wikiitem.get_en_description(),
-                        "wk relation text": self.generate_relations_text(wikiitem, term_wikiitems),
-                        "domain term": domain_node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES]["qualified_name"],
+                        "name": wiki_node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES]["wikidata_name"],
+                        "alias": wiki_node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES]["alias_en"],
+                        "description": wiki_node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES]["description_en"],
+                        "domain term": node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES]["qualified_name"],
                         "score": score,
-                        "combined name": self.get_compare_name_for_domain_term(domain_node_json),
                         "link": True,
-                        "domain_id": id,
-                        "wd_item_id": wikiitem.wd_item_id
+                        "domain_id": node_id,
+                        "wd_item_id": wiki_node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES]["alias_en"]["wd_item_id"]
                     })
-                    wikidata_node_id = self.add_wikidata_item(wikiitem)
-                    self.graph_data.add_relation(startId=id, endId=wikidata_node_id,
+                    self.graph_data.add_relation(startId=node_id, endId=wiki_id,
                                                  relationType="related to")
             except Exception:
                 traceback.print_exc()

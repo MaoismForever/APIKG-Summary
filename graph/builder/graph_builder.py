@@ -233,7 +233,8 @@ class CodeGraphBuilder:
         print("start adding wikidata knowledge for %s" % pro_name)
 
         fusion = GenericKGFusion()
-        fusion.add_all_wiki_nodes()
+        fusion.init_graph_data(input_graph_data_path)
+        # fusion.add_all_wiki_nodes()
 
         builder = GraphNodeDocumentBuilder(graph_data=fusion.graph_data)
         doc_collection = builder.build_doc_for_kg()
@@ -244,7 +245,6 @@ class CodeGraphBuilder:
         AVGW2VFLModel.train(model_dir_path=word2vec_model_path,
                             doc_collection=preprocess_doc_collection)
 
-        fusion.init_graph_data(input_graph_data_path)
         fusion.load_w2v_model(word2vec_model_path)
 
         fusion.init_wd_from_cache(title_save_path=generic_title_search_cache_path,
@@ -261,7 +261,7 @@ class CodeGraphBuilder:
         fusion.save(output_graph_data_path)
         print("end adding wikidata knowledge for %s" % pro_name)
 
-        print("model w2v model for  new graph")
+        print("train w2v model for new graph")
         builder = GraphNodeDocumentBuilder(graph_data=fusion.graph_data)
         doc_collection = builder.build_doc_for_kg()
 
