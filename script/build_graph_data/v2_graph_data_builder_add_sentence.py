@@ -44,11 +44,10 @@ def build_v2_graph_for_pro(pro_name):
             short_desc = " ".join(short_desc.split())
             str_rm_sign = classifier.preprocessor.remove_sign(short_desc)
             text = classifier.preprocessor.remove_stop_words(str_rm_sign)
-            label = list(classifier.predict(text))
+            label = list(classifier.predict(text))[0]
             # windows
             # if label == '__label__1':
             # linux
-            print(label)
             if label == "0":
                 print(short_desc)
                 with open(filter_sentence_path, "a", encoding='utf-8') as f:

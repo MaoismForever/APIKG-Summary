@@ -68,7 +68,7 @@ class FastTextClassifier:
         rmsign_text = self.preprocessor.remove_sign(text)
         pre_data = self.preprocessor.remove_stop_words(rmsign_text)
         if len(text.split()) <= 2:
-            b = ('__label__0',)
+            b = ('0',)
             return b
         # linux
         label = self.classifier.predict_single(pre_data)
@@ -77,7 +77,7 @@ class FastTextClassifier:
         try:
             return label[0]
         except:
-            b = ('__label__0',)
+            b = ('0',)
             return b
 
 
