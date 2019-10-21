@@ -364,6 +364,7 @@ class GenericKGFusion:
 
                 for wiki_id, score in retrieval_results:
                     wiki_node_json = self.graph_data.get_node_info_dict(wiki_id)
+                    print(wiki_node_json)
                     record.append({
                         "name": wiki_node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES]["wikidata_name"],
                         "alias": wiki_node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES]["alias_en"],

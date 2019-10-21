@@ -236,14 +236,14 @@ class CodeGraphBuilder:
         fusion.init_graph_data(input_graph_data_path)
         # fusion.add_all_wiki_nodes()
 
-        builder = GraphNodeDocumentBuilder(graph_data=fusion.graph_data)
-        doc_collection = builder.build_doc_for_kg()
-
-        preprocess_doc_collection = PreprocessMultiFieldDocumentCollection.create_from_doc_collection(
-            preprocessor=CodeDocPreprocessor(), doc_collection=doc_collection)
-
-        AVGW2VFLModel.train(model_dir_path=word2vec_model_path,
-                            doc_collection=preprocess_doc_collection)
+        # builder = GraphNodeDocumentBuilder(graph_data=fusion.graph_data)
+        # doc_collection = builder.build_doc_for_kg()
+        #
+        # preprocess_doc_collection = PreprocessMultiFieldDocumentCollection.create_from_doc_collection(
+        #     preprocessor=CodeDocPreprocessor(), doc_collection=doc_collection)
+        #
+        # AVGW2VFLModel.train(model_dir_path=word2vec_model_path,
+        #                     doc_collection=preprocess_doc_collection)
 
         fusion.load_w2v_model(word2vec_model_path)
 
