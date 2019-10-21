@@ -335,13 +335,13 @@ class GenericKGFusion:
                 node_properties = node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES]
                 lemma = node_properties[PropertyConstant.LEMMA]
                 alias_set = node_properties[PropertyConstant.ALIAS]
-                term_name=node_properties["term_name"]
+                term_name = node_properties["term_name"]
                 alias_set.add(lemma)
                 alias_set.add(term_name)
-                text=" ".join(list(alias_set))
-                wiki_words = self.w2v_model.preprocessor.clean(text)
-                wiki_vec = self.w2v_model.get_avg_w2v_vec(wiki_words)
-                score_vector = (doc_model.similar_by_vector(wiki_vec, topn=None) + 1) / 2
+                text = " ".join(list(alias_set))
+                domain_words = self.w2v_model.preprocessor.clean(text)
+                domain_vec = self.w2v_model.get_avg_w2v_vec(domain_words)
+                score_vector = (doc_model.similar_by_vector(domain_vec, topn=None) + 1) / 2
                 over_thred = np.where(score_vector > 0.8)
                 top_wiki_valid = np.intersect1d(over_thred, valid_wiki_index)
                 if top_wiki_valid.size:
@@ -372,7 +372,7 @@ class GenericKGFusion:
                         "score": score,
                         "link": True,
                         "domain_id": node_id,
-                        "wd_item_id": wiki_node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES]["alias_en"]["wd_item_id"]
+                        "wd_item_id": wiki_node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES]["wd_item_id"]
                     })
                     self.graph_data.add_relation(startId=node_id, endId=wiki_id,
                                                  relationType="related to")
