@@ -12,7 +12,7 @@ from util.path_util import PathUtil
 
 
 @catch_exception
-def train_model(pro_name, version):
+def train_avg_w2v_model(pro_name, version):
     doc_path = PathUtil.doc(pro_name, version)
     collection = MultiFieldDocumentCollection.load(str(doc_path))
     processor = CodeDocPreprocessor()
@@ -29,4 +29,4 @@ if __name__ == '__main__':
     versions = ["v3_1"]
     for version in versions:
         for pro_name in pro_list:
-            train_model(pro_name, version)
+            train_avg_w2v_model(pro_name, version)

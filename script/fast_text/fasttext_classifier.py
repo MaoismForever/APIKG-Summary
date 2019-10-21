@@ -86,6 +86,6 @@ if __name__ == "__main__":
     # print(classifier.predict("Invoked when a component gains the keyboard focus."))
     classifier.predict("()")
     classifier.predict("Returns the authorization")
-    # classifier.train_model()
+    # classifier.train_avg_w2v_model()
     # texts = ["Deprecated", " Overrides equals", "Constant Tags Unicode character block"]
     # classifier.ten_fold_cross_validation()
