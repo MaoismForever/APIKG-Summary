@@ -176,7 +176,6 @@ class DomainKGFusion:
                     linkages.update(linkages_)
                     continue
 
-
                 if len(node_labels & self.METHOD_LABELS) > 0:
                     terms_, linkages_ = self.handle_text_in_method(node_id, node_properties)
                     not_fused_terms.update(terms_)
@@ -332,7 +331,7 @@ class DomainKGFusion:
 
     def valid_term(self, term):
         term = str(term)
-        if len(term) <= 1 or term.isdigit():
+        if len(term) <= 2 or term.isdigit() or (len(term) > 30 and len(term.split()) > 4):
             return False
         prefix, *rest = term.split()
         if prefix in self.STOPLIST:
