@@ -234,8 +234,9 @@ class CodeGraphBuilder:
 
         fusion = GenericKGFusion()
         fusion.init_graph_data(input_graph_data_path)
-        # fusion.add_all_wiki_nodes()
-
+        fusion.add_all_wiki_nodes()
+        fusion.save(output_graph_data_path)
+        #
         # builder = GraphNodeDocumentBuilder(graph_data=fusion.graph_data)
         # doc_collection = builder.build_doc_for_kg()
         #
@@ -244,30 +245,30 @@ class CodeGraphBuilder:
         #
         # AVGW2VFLModel.train(model_dir_path=word2vec_model_path,
         #                     doc_collection=preprocess_doc_collection)
-
-        fusion.load_w2v_model(word2vec_model_path)
-
-        fusion.init_wd_from_cache(title_save_path=generic_title_search_cache_path,
-                                  item_save_path=generic_wikidata_item_cache_path)
-        fusion.init_wikipedia_contex(wikipedia_context_path=wikipedia_context_path)
-
-        record = fusion.simple_fuse()
-
-        fusion_temp_result_dir = Path(fusion_temp_result_dir)
-        with Path(str(fusion_temp_result_dir / "record.json")).open("w", encoding="utf-8") as f:
-            json.dump(record, f, indent=4)
-
-        # fusion.graph_data.add_label_to_all(pro_name)
-        fusion.save(output_graph_data_path)
-        print("end adding wikidata knowledge for %s" % pro_name)
-
-        print("train w2v model for new graph")
-        builder = GraphNodeDocumentBuilder(graph_data=fusion.graph_data)
-        doc_collection = builder.build_doc_for_kg()
-
-        preprocess_doc_collection = PreprocessMultiFieldDocumentCollection.create_from_doc_collection(
-            preprocessor=CodeDocPreprocessor(), doc_collection=doc_collection)
-
-        AVGW2VFLModel.train(model_dir_path=word2vec_model_path,
-                            doc_collection=preprocess_doc_collection)
+        #
+        # fusion.load_w2v_model(word2vec_model_path)
+        #
+        # fusion.init_wd_from_cache(title_save_path=generic_title_search_cache_path,
+        #                           item_save_path=generic_wikidata_item_cache_path)
+        # fusion.init_wikipedia_contex(wikipedia_context_path=wikipedia_context_path)
+        #
+        # record = fusion.simple_fuse()
+        #
+        # fusion_temp_result_dir = Path(fusion_temp_result_dir)
+        # with Path(str(fusion_temp_result_dir / "record.json")).open("w", encoding="utf-8") as f:
+        #     json.dump(record, f, indent=4)
+        #
+        # # fusion.graph_data.add_label_to_all(pro_name)
+        # fusion.save(output_graph_data_path)
+        # print("end adding wikidata knowledge for %s" % pro_name)
+        #
+        # print("train w2v model for new graph")
+        # builder = GraphNodeDocumentBuilder(graph_data=fusion.graph_data)
+        # doc_collection = builder.build_doc_for_kg()
+        #
+        # preprocess_doc_collection = PreprocessMultiFieldDocumentCollection.create_from_doc_collection(
+        #     preprocessor=CodeDocPreprocessor(), doc_collection=doc_collection)
+        #
+        # AVGW2VFLModel.train(model_dir_path=word2vec_model_path,
+        #                     doc_collection=preprocess_doc_collection)
         return fusion.graph_data

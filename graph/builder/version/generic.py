@@ -308,6 +308,7 @@ class GenericKGFusion:
 
     def add_all_wiki_nodes(self):
         print("start add all wiki nodes.......")
+        self.graph_data.create_index_on_property(WikiDataConstance.PRIMARY_PROPERTY_NAME)
         term_wikiitems = self.fetcher.item_cache
         wikiiterms_ids = term_wikiitems.keys()
         self.add_wikidata_items(wikiiterms_ids)
@@ -364,7 +365,6 @@ class GenericKGFusion:
 
                 for wiki_id, score in retrieval_results:
                     wiki_node_json = self.graph_data.get_node_info_dict(wiki_id)
-                    print(wiki_node_json)
                     record.append({
                         "name": wiki_node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES]["wikidata_name"],
                         "alias": wiki_node_json[GraphData.DEFAULT_KEY_NODE_PROPERTIES]["alias_en"],
