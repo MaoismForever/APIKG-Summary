@@ -44,7 +44,7 @@ def build_v2_graph_for_pro(pro_name):
             short_desc = " ".join(short_desc.split())
             str_rm_sign = classifier.preprocessor.remove_sign(short_desc)
             text = classifier.preprocessor.remove_stop_words(str_rm_sign)
-            label = list(classifier.predict(text))[0]
+            label = list(classifier.predict(text))
             # windows
             # if label == '__label__1':
             # linux
