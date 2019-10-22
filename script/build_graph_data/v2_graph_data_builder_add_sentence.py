@@ -13,9 +13,6 @@ classifier = FastTextClassifier()
 
 
 def build_v2_graph_for_pro(pro_name):
-    # document_collection_path = PathUtil.doc(pro_name=pro_name, version="v1")
-    # collection: MultiFieldDocumentCollection = MultiFieldDocumentCollection.load(document_collection_path)
-    # docs = collection.get_document_list()
 
     graph_data_path = PathUtil.graph_data(pro_name=pro_name, version="v1")
     graph_data: GraphData = GraphData.load(graph_data_path)
@@ -37,17 +34,12 @@ def build_v2_graph_for_pro(pro_name):
 
         short_description = pat.sub('', short_description)
         short_descs = sent_tokenize(short_description)
-        # short_description = short_description.replace("<code>", "").replace("</code>", "")
-        # short_descs = short_description.split("\n")
 
         for short_desc in short_descs:
             short_desc = " ".join(short_desc.split())
             str_rm_sign = classifier.preprocessor.remove_sign(short_desc)
             text = classifier.preprocessor.remove_stop_words(str_rm_sign)
             label = list(classifier.predict(text))[0]
-            # windows
-            # if label == '__label__1':
-            # linux
             if label == "0":
                 print(short_desc)
                 with open(filter_sentence_path, "a", encoding='utf-8') as f:
@@ -57,20 +49,6 @@ def build_v2_graph_for_pro(pro_name):
             else:
                 res.add_sentence_relation(short_desc, id, int(label))
     res.save_new_graph_data()
-    # for doc in docs:
-    #     api_id = doc.get_document_id()
-    #     short_descs = doc.get_doc_text_by_field('short_description_sentences')
-    #     for short_desc in short_descs:
-    #         label = list(classifier.predict(short_desc))[0]
-    #         if label == '__label__0':
-    #             print(short_desc)
-    #             with open(filter_sentence_path, "a") as f:
-    #                 f.write(short_desc)
-    #                 f.write("\n")
-    #             continue
-    #         else:
-    #             res.add_sentence_relation(short_desc, api_id)
-    # res.save_new_graph_data()
 
 
 if __name__ == '__main__':

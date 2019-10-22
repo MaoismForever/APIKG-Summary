@@ -5,7 +5,7 @@ from util.path_util import PathUtil
 
 if __name__ == '__main__':
     pro_name = "jdk8"
-    version = "v3_1"
+    version = "v3"
     model_dir_path = PathUtil.sim_model(pro_name=pro_name, version=version, model_type="avg_n2v")
     model = AVGNode2VectorModel.load(model_dir_path)
     graph_data_path = PathUtil.graph_data(pro_name=pro_name, version=version)

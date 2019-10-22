@@ -43,13 +43,6 @@ class PathUtil:
         jdk_graph_data_path = str(jdk_graph_data_dir / ("jdk8" + ".v1.graph"))
         return jdk_graph_data_path
 
-    @staticmethod
-    def android_graph_data():
-        jdk_graph_data_dir = Path(OUTPUT_DIR) / "graph" / "android27"
-        jdk_graph_data_dir.mkdir(exist_ok=True, parents=True)
-
-        jdk_graph_data_path = str(jdk_graph_data_dir / ("android27" + ".v1.graph"))
-        return jdk_graph_data_path
 
     @staticmethod
     def jdk_api_node_map():
@@ -57,15 +50,6 @@ class PathUtil:
         jdk_graph_data_dir.mkdir(exist_ok=True, parents=True)
 
         id_map_file_path = str(jdk_graph_data_dir / ("jdk8" + ".api2node.map"))
-
-        return id_map_file_path
-
-    @staticmethod
-    def android_api_node_map():
-        jdk_graph_data_dir = Path(OUTPUT_DIR) / "graph" / "android27"
-        jdk_graph_data_dir.mkdir(exist_ok=True, parents=True)
-
-        id_map_file_path = str(jdk_graph_data_dir / ("android27" + ".api2node.map"))
 
         return id_map_file_path
 
@@ -81,13 +65,6 @@ class PathUtil:
         jdk_graph_data_dir = Path(OUTPUT_DIR) / "graph" / "jdk8"
         jdk_graph_data_dir.mkdir(exist_ok=True, parents=True)
         jdk_graph_data_path = str(jdk_graph_data_dir / ("jdk8" + ".v3.graph"))
-        return jdk_graph_data_path
-
-    @staticmethod
-    def small_wikidata_jdk_graph_data():
-        jdk_graph_data_dir = Path(OUTPUT_DIR) / "graph" / "jdk8"
-        jdk_graph_data_dir.mkdir(exist_ok=True, parents=True)
-        jdk_graph_data_path = str(jdk_graph_data_dir / ("jdk8" + ".v2.5.graph"))
         return jdk_graph_data_path
 
     @staticmethod
@@ -211,12 +188,6 @@ class PathUtil:
         domain_dir.mkdir(exist_ok=True, parents=True)
         return str(domain_dir)
 
-    @staticmethod
-    def benchmark(pro_name):
-        experiment_store_dir = Path(OUTPUT_DIR) / "experiment"
-        experiment_store_dir.mkdir(exist_ok=True, parents=True)
-        benchmark_path = Path(BENCHMARK_DIR) / ("%s.benchmark" % pro_name)
-        return str(benchmark_path)
 
     @staticmethod
     def experiment_record(pro_name):
@@ -286,25 +257,11 @@ class PathUtil:
         return str(d)
 
     @staticmethod
-    def domain_concept_list(pro_name):
-        domain_dir = Path(PathUtil.domain_concept_dir(pro_name=pro_name, version="v1"))
-        concept_list_path = domain_dir / "terms.txt"
-
-        return str(concept_list_path)
-
-    @staticmethod
     def wikipedia_context_cache():
         generic_cached_wikidata_dir = PathUtil.all_wikidata_dir()
         all_wikidata_dir = Path(generic_cached_wikidata_dir)
         generic_wikipedia_context_path = str(all_wikidata_dir / "wikipedia_context.bin")
         return generic_wikipedia_context_path
-
-    @staticmethod
-    def generic_title_search_cache():
-        generic_cached_wikidata_dir = PathUtil.all_wikidata_dir()
-        all_wikidata_dir = Path(generic_cached_wikidata_dir)
-        generic_title_search_cache_path = str(all_wikidata_dir / "term_titles.bin")
-        return generic_title_search_cache_path
 
     @staticmethod
     def generic_wikidata_item_cache():
@@ -313,13 +270,6 @@ class PathUtil:
         generic_wikidata_item_cache_path = str(all_wikidata_dir / "term_wikiitems.bin")
         return generic_wikidata_item_cache_path
 
-    @staticmethod
-    def project_title_search_cache(pro_name):
-        wikidata_dir = Path(PathUtil.wikidata_dir(pro_name))
-
-        pro_title_search_cache_path = str(wikidata_dir / "term_titles.bin")
-
-        return pro_title_search_cache_path
 
     @staticmethod
     def project_wikidata_item_cache(pro_name):
@@ -339,37 +289,9 @@ class PathUtil:
         doc_dir = PathUtil.doc_dir(pro_name)
         return str(Path(doc_dir) / "{pro}.v0.code.dc".format(pro=pro_name))
 
-    @staticmethod
-    def method_code_doc_collection(pro_name):
-        doc_dir = PathUtil.doc_dir(pro_name)
-        return str(Path(doc_dir) / "{pro}.v0.method.code.dc".format(pro=pro_name))
-
-    @staticmethod
-    def pre_method_code_doc_collection(pro_name, pre_way="pure-pre"):
-        doc_dir = PathUtil.doc_dir(pro_name)
-
-        return str(Path(doc_dir) / "{pro}.v0.{pre_way}.method.code.dc".format(pro=pro_name, pre_way=pre_way))
 
     @staticmethod
     def method_search_model(pro_name, model_type):
         model_dir = Path(OUTPUT_DIR) / "sim_models" / pro_name / "method_search" / model_type
         model_dir.mkdir(exist_ok=True, parents=True)
-
         return str(model_dir)
-
-    @staticmethod
-    def best_graph_sim_model_type():
-        pre_way = "code-pre"
-        model_type = "{pre_way}+bm25+graph".format(pre_way=pre_way)
-        return model_type
-
-    @staticmethod
-    def best_method_search_model_type():
-        model_type = "bm25+method-search"
-        return model_type
-
-    @staticmethod
-    def best_text_sim_model(pro_name, version):
-        model_type = "code-pre+bm25+graph"
-        doc_sim_model_path = PathUtil.sim_model(pro_name=pro_name, version=version, model_type=model_type)
-        return doc_sim_model_path

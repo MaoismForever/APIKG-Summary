@@ -1,15 +1,12 @@
 from sekg.graph.exporter.graph_data import GraphData
 from sekg.ir.models.n2v.svm.filter_semantic_tfidf_n2v import FilterSemanticTFIDFNode2VectorModel
 
-from definitions import OUTPUT_DIR
-from pathlib import Path
-
 from util.path_util import PathUtil
 
 if __name__ == '__main__':
-    model_dir_path = PathUtil.sim_model(pro_name="jdk8", version="v3_1", model_type="svm")
+    model_dir_path = PathUtil.sim_model(pro_name="jdk8", version="v3", model_type="svm")
     model = FilterSemanticTFIDFNode2VectorModel.load(model_dir_path)
-    graph_data_path = PathUtil.graph_data(pro_name="jdk8", version="v3_1")
+    graph_data_path = PathUtil.graph_data(pro_name="jdk8", version="v3")
     graph_data: GraphData = GraphData.load(graph_data_path)
     valid_class_ids = graph_data.get_node_ids_by_label("class")
     valid_class_ids = valid_class_ids - graph_data.get_node_ids_by_label("class type")
@@ -30,5 +27,4 @@ if __name__ == '__main__':
         else:
             print("invalid input")
         for index, item in enumerate(result):
-            print(index, " ", item
-                  )
+            print(index, " ", item)

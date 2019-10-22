@@ -1,13 +1,11 @@
 from sekg.graph.exporter.graph_data import NodeInfo, NodeInfoFactory
 from sekg.util.code import CodeElementNameUtil
-
-import sys
-
 from db.api_model import APIEntity
 from db.model import CodeElement
 from sekg.constant.code import CodeEntityCategory
 from sekg.constant.constant import DomainConstant, OperationConstance, PropertyConstant, CodeConstant, \
     WikiDataConstance
+from util.constant import SentenceConstant
 
 
 class ProjectKGNodeInfoFactory(NodeInfoFactory):
@@ -36,6 +34,11 @@ class ProjectKGNodeInfoFactory(NodeInfoFactory):
             return WikidataEntityNodeInfo(node_id=node_id,
                                           labels=labels,
                                           properties=properties)
+        if SentenceConstant.LABEL_SENTENCE in labels:
+            return SentenceEntityNodeInfo(node_id=node_id,
+                                          labels=labels,
+                                          properties=properties)
+
         return NodeInfo(node_id=node_id,
                         labels=labels,
                         properties=properties)
@@ -232,6 +235,47 @@ class WikidataEntityNodeInfo(NodeInfo):
 
     def __repr__(self):
         return "<WikidataEntityNodeInfo id=%d labels=%r properties=%r>" % (
+            self.node_id,
+            self.labels,
+            self.properties)
+
+
+class SentenceEntityNodeInfo(NodeInfo):
+    PRIVATE_PROPERTIES = {
+
+    }
+
+    def get_main_name(self):
+        return self.properties.get(SentenceConstant.PRIMARY_PROPERTY_NAME, "")
+
+    def get_all_names(self):
+        name_list = [self.get_main_name(), ]
+        name_list.extend(list(self.properties.get(PropertyConstant.ALIAS, [])))
+        name_list.extend(list(self.properties.get("aliases_en", [])))
+        name_list = [name for name in name_list if name]
+        return list(set(name_list))
+
+    def get_all_valid_attributes(self):
+        valid_attribute_pairs = []
+        for property_name in self.properties.keys():
+            if self.is_valid_property(property_name):
+                value = self.properties[property_name]
+                valid_attribute_pairs.append((property_name, value))
+
+        return valid_attribute_pairs
+
+    def is_valid_property(self, property_name):
+        valid = super().is_valid_property(property_name=property_name)
+        if not valid:
+            return False
+
+        if property_name in self.PRIVATE_PROPERTIES:
+            return False
+
+        return True
+
+    def __repr__(self):
+        return "<SentenceEntityNodeInfo id=%d labels=%r properties=%r>" % (
             self.node_id,
             self.labels,
             self.properties)

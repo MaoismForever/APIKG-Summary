@@ -1,22 +1,12 @@
 [
   {
-    "server_name": "87Neo4jAndroid",
-    "server_id": 1,
-    "host": "localhost",
-    "user": "neo4j",
-    "password": "123456",
-    "http_port": 7474,
-    "https_port": 7473,
-    "bolt_port": 7687
-  },
-  {
     "server_name": "87Neo4jApiSummaryJdk",
-    "server_id": 2,
-    "host": "10.141.221.87",
-    "user": "neo4j",
-    "password": "123456",
-    "http_port": 15474,
-    "https_port": 15473,
-    "bolt_port": 15687
+    "server_id": 1,
+    "host": "",
+    "user": "",
+    "password": "",
+    "http_port": 0,
+    "https_port": 0,
+    "bolt_port": 0
   }
 ]

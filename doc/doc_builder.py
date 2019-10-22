@@ -1,12 +1,7 @@
 import traceback
 from pathlib import Path
-
-import sys
-
-sys.path.append('/home/fdse/lvgang/APIKGSummaryV1')
-
 from bs4 import BeautifulSoup
-from sekg.graph.exporter.graph_data import GraphDataReader, GraphData, NodeInfo
+from sekg.graph.exporter.graph_data import GraphDataReader, GraphData
 from sekg.ir.doc.wrapper import MultiFieldDocumentCollection, MultiFieldDocument
 
 from doc.node_info import ProjectKGNodeInfoFactory, CodeElementNodeInfo, DomainEntityNodeInfo, OperationEntityNodeInfo, \

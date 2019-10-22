@@ -12,8 +12,6 @@ from util.path_util import PathUtil
 
 @catch_exception
 def train_model(pro_name, version, weight):
-    # pre_doc_collection_out_path = PathUtil.pre_doc(pro_name, version, pre_way="spacy-pre")
-    # document_collection_path = Path(DATA_DIR) / 'doc' / 'jdk8' / 'jdk8.v4.dc'
     document_collection_path = PathUtil.doc(pro_name, version)
     collection = MultiFieldDocumentCollection.load(str(document_collection_path))
     processor = CodeDocPreprocessor()
@@ -22,9 +20,6 @@ def train_model(pro_name, version, weight):
     graph_data_path = PathUtil.graph_data(pro_name=pro_name, version=version)
 
     pretrain_node2vec_path = PathUtil.node2vec(pro_name=pro_name, version=version, weight=weight)
-
-    # doc_collection: PreprocessMultiFieldDocumentCollection = PreprocessMultiFieldDocumentCollection.load(
-    #     pre_doc_collection_out_path)
 
     embedding_size = 100
 
@@ -44,7 +39,7 @@ def train_model(pro_name, version, weight):
 if __name__ == '__main__':
     pro_list = SUPPORT_PROJECT_LIST
     weights = ["unweight"]
-    versions = ["v3_1"]
+    versions = ["v3"]
     for version in versions:
         for pro_name in pro_list:
             for weight in weights:

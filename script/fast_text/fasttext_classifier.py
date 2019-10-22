@@ -1,17 +1,6 @@
 # encoding=utf-8
-import sys
-
-sys.path.append('/home/fdse/lvgang/APIKGSummaryV1')
-import json
 import os
-import random
-from nltk.tokenize import WordPunctTokenizer
-from nltk.corpus import *
-# linux
 from pyfasttext import FastText
-# windows
-# from fasttext import FastText
-import itertools
 from definitions import DATA_DIR, OUTPUT_DIR
 from pathlib import Path
 
@@ -35,10 +24,7 @@ class FastTextClassifier:
 
     def load_model(self, ):
         if os.path.exists(self.model_path):
-            # linux
             self.classifier = FastText(self.model_path)
-            # windows
-            # self.classifier = FastText.load_model(self.model_path)
         else:
             self.train_model()
             print("no such model, model now")
@@ -47,10 +33,7 @@ class FastTextClassifier:
         self.model_path = new_path
 
     def train_model(self):
-        # linux
         classifier = FastText.supervised(input=train_data_path, output=model_dir, lr=0.25, ws=4)
-        # windows
-        # classifier = FastText.train_supervised(input=train_data_path, lr=0.25, ws=4)
         classifier.save_model(self.model_path)
         self.classifier = classifier
         print("test result in training data:")
@@ -70,10 +53,8 @@ class FastTextClassifier:
         if len(text.split()) <= 2:
             b = ('0',)
             return b
-        # linux
         label = self.classifier.predict_single(pre_data)
-        # windows
-        # label = self.classifier.predict(pre_data)
+
         try:
             return label[0]
         except:
@@ -83,9 +64,5 @@ class FastTextClassifier:
 
 if __name__ == "__main__":
     classifier = FastTextClassifier()
-    # print(classifier.predict("Invoked when a component gains the keyboard focus."))
     classifier.predict("()")
     classifier.predict("Returns the authorization")
-    # classifier.train_avg_w2v_model()
-    # texts = ["Deprecated", " Overrides equals", "Constant Tags Unicode character block"]
-    # classifier.ten_fold_cross_validation()

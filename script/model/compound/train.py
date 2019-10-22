@@ -1,17 +1,8 @@
-from pathlib import Path
-
 from sekg.ir.doc.wrapper import PreprocessMultiFieldDocumentCollection, MultiFieldDocumentCollection
 from sekg.ir.models.avg_w2v import AVGW2VFLModel
-from sekg.ir.models.bm25 import BM25Model
 from sekg.ir.models.compound import CompoundSearchModel
-from sekg.ir.models.n2v.svm.avg_n2v import AVGNode2VectorModel
 from sekg.ir.models.n2v.svm.filter_semantic_tfidf_n2v import FilterSemanticTFIDFNode2VectorModel
-from sekg.ir.models.n2v.svm.tfidf_n2v import TFIDFNode2VectorModel
-from sekg.ir.models.tf_idf import TFIDFModel
-from sekg.ir.preprocessor.base import Preprocessor
 from sekg.ir.preprocessor.code_text import CodeDocPreprocessor
-
-from definitions import SUPPORT_PROJECT_LIST, DATA_DIR, OUTPUT_DIR
 from script.model.avg_w2v.train import train_avg_w2v_model
 from script.model.n2v.svm_train import SVMTrainer
 from util.annotation import catch_exception
@@ -24,10 +15,6 @@ def train_model(pro_name, version, first_model_config, second_model_config):
     collection = MultiFieldDocumentCollection.load(str(document_collection_path))
     processor = CodeDocPreprocessor()
     doc_collection = PreprocessMultiFieldDocumentCollection.create_from_doc_collection(processor, collection)
-
-    # pre_doc_collection_out_path = PathUtil.pre_doc(pro_name, version, pre_way="code-pre")
-    # doc_collection: PreprocessMultiFieldDocumentCollection = PreprocessMultiFieldDocumentCollection.load(
-    #     pre_doc_collection_out_path)
 
     sub_search_model_config = [
         (PathUtil.sim_model(pro_name=pro_name, version=version, model_type=first_model_config[0]),
@@ -53,10 +40,10 @@ def train_model(pro_name, version, first_model_config, second_model_config):
 
 if __name__ == '__main__':
     pro_name = "jdk8"
-    version = "v3_1"
+    version = "v3"
+    train_avg_w2v_model(pro_name, version)
     svm = SVMTrainer(pro_name, version)
     svm.train()
-    train_avg_w2v_model(pro_name, version)
     model_compound_list = [
         [("avg_w2v", AVGW2VFLModel, 0.6), ("svm", FilterSemanticTFIDFNode2VectorModel, 0.4)]
 

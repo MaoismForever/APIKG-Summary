@@ -2,135 +2,15 @@
   {
     "server_name": "87RootServer",
     "server_id": 1,
-    "host": "10.141.221.87",
-    "user": "root",
-    "password": "root",
+    "host": "",
+    "user": "",
+    "password": "",
     "description": "the mysql for all kg work",
     "databases": [
       {
         "database_id": 1,
-        "database_name": "jedite",
-        "description": "feature location project for jedite"
-      },
-      {
-        "database_id": 2,
-        "database_name": "jabref",
-        "description": "feature location project for jabref"
-      },
-      {
-        "database_id": 3,
-        "database_name": "argoUML022",
-        "description": "feature location project for argoUML022"
-      },
-      {
-        "database_id": 8,
-        "database_name": "huawei_demo",
-        "description": "huawei_demo for current version"
-      },
-      {
-        "database_id": 9,
-        "database_name": "domainkg",
+        "database_name": "",
         "description": ""
-      },
-      {
-        "database_id": 10,
-        "database_name": "api_delete_android",
-        "description": "jdk api delete android"
-      },
-      {
-        "database_id": 11,
-        "database_name": "argoUML024",
-        "description": "argoUML024"
-      },
-      {
-        "database_id": 12,
-        "database_name": "argoUML026",
-        "description": "argoUML026"
-      },
-      {
-        "database_id": 13,
-        "database_name": "eclipse",
-        "description": "eclipse"
-      },
-      {
-        "database_id": 14,
-        "database_name": "mucommander",
-        "description": "mucommander"
-      },
-      {
-        "database_id": 15,
-        "database_name": "codehub",
-        "description": "the data for jdk and android api"
-      }
-    ]
-  },
-  {
-    "server_name": "73CodeHub",
-    "server_id": 2,
-    "host": "10.141.221.73",
-    "user": "root",
-    "password": "root",
-    "description": "the 73 server, old data position for kg construction old work",
-    "databases": [
-      {
-        "database_id": 1,
-        "database_name": "codehub",
-        "description": "the most kg data location, including android and jdk all api entity and sentences"
-      },
-      {
-        "database_id": 2,
-        "database_name": "huawei_demo_2",
-        "description": "todo"
-      }
-    ]
-  },
-  {
-    "server_name": "160StackOverflow",
-    "server_id": 3,
-    "host": "10.131.252.160",
-    "user": "root",
-    "password": "root",
-    "description": "the 160 server, store some data about StackOverflow",
-    "databases": [
-      {
-        "database_id": 1,
-        "database_name": "stackoverflow",
-        "description": "the stackoverflow data position"
-      }
-    ]
-  },
-  {
-    "server_name": "75KnowledgeGraph",
-    "server_id": 3,
-    "host": "10.141.221.75",
-    "user": "root",
-    "password": "root",
-    "description": "the 75 knowledge graph database",
-    "databases": [
-      {
-        "database_id": 1,
-        "database_name": "knowledgeGraph",
-        "description": "the knowledgeGraph"
-      }
-    ]
-  },
-  {
-    "server_name": "89Server",
-    "server_id": 3,
-    "host": "10.141.221.89",
-    "user": "root",
-    "password": "root",
-    "description": "the 89 knowledge graph database for all data",
-    "databases": [
-      {
-        "database_id": 1,
-        "database_name": "api_backup",
-        "description": "the api_backup for jdk and android api"
-      },
-      {
-        "database_id": 15,
-        "database_name": "codehub",
-        "description": "the data for jdk and android api"
       }
     ]
   }

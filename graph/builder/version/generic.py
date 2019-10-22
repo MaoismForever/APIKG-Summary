@@ -1,14 +1,11 @@
 import pickle
 import traceback
 from pathlib import Path
-
-import gensim
 import numpy as np
 from gensim.models import KeyedVectors
 from sekg.constant.constant import PropertyConstant, DomainConstant, WikiDataConstance
 from sekg.graph.exporter.graph_data import GraphData
 from sekg.ir.models.avg_w2v import AVGW2VFLModel
-from sekg.ir.preprocessor.code_text import CodeDocPreprocessor, PureCodePreprocessor
 from sekg.text.extractor.domain_entity.nlp_util import SpacyNLPFactory
 from sekg.wiki.WikiDataItem import WikiDataItem
 from sekg.wiki.search_domain_wiki.wikidata_searcher import AsyncWikiSearcher

@@ -622,19 +622,3 @@ class DomainKGFusion:
             else:
                 print("can't find node for %s" % (name))
         return self.graph_data
-
-    # def filter_domain_by_name_length(self, name_length=30, name_split_number=3):
-    #     domain_ids = self.graph_data.get_node_ids_by_label(DomainConstant.LABEL_DOMAIN_TERM)
-    #     remove_nodes = []
-    #     for node_id in domain_ids:
-    #         node_info = self.graph_data.get_node_info_dict(node_id)
-    #         term_name = node_info[GraphData.DEFAULT_KEY_NODE_PROPERTIES][DomainConstant.PRIMARY_PROPERTY_NAME]
-    #         if len(term_name) > name_length and len(term_name.split(" ")) > name_split_number:
-    #             out_relations = self.graph_data.get_all_out_relations(node_id)
-    #             in_relations = self.graph_data.get_all_in_relations(node_id)
-    #             for s, r, e in out_relations.union(in_relations):
-    #                 # print('delete relation %d, %s, %d' % (s, r, e))
-    #                 self.graph_data.remove_relation(s, r, e)
-    #             remove_nodes.append(node_id)
-    #     for node_id in remove_nodes:
-    #         self.graph_data.remove_node(node_id)

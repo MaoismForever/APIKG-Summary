@@ -1,11 +1,7 @@
 import json
 import pickle
-from pathlib import Path
 from sekg.ir.models.compound import CompoundSearchModel
 from sekg.graph.exporter.graph_data import GraphData
-from sekg.ir.models.n2v.svm.filter_semantic_tfidf_n2v import FilterSemanticTFIDFNode2VectorModel
-
-from definitions import OUTPUT_DIR, ROOT_DIR
 from util.path_util import PathUtil
 
 

@@ -8,11 +8,7 @@ if __name__ == '__main__':
     model_dir = PathUtil.sim_model(pro_name=pro_name, version=version, model_type=compound_model_name)
     summary = Summary(pro_name, version, model_dir)
     while True:
-        # query = input("please input query:")
-        query = "Round a double to 2 decimal places"
+        query = input("please input query:")
         all_class_2_summary = summary.get_summary_only_query_by_method(query, 66)
         for index, item in all_class_2_summary.items():
             print(index, item)
-    # input_query = "How can I read input from the console using the Scanner class in Java?"
-    # summary.get_summary_only_query(input_query, 66)
-    # summary.get_summary_only_query_by_sentence(input_query, 66)

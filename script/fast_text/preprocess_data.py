@@ -1,6 +1,5 @@
 import json
 import random
-import sys
 from pathlib import Path
 from definitions import DATA_DIR
 from nltk import WordPunctTokenizer

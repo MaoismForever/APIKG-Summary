@@ -1,14 +1,7 @@
-import sys
-
-sys.path.append('/home/fdse/lvgang/APIKGSummaryV1')
+from util.constant import SentenceConstant, ConceptConstant, FeatureConstant
 from sekg.constant.constant import DomainConstant, CodeConstant
-from sekg.graph.exporter.graph_data import GraphData
 from sekg.util.annotation import catch_exception
 
-from constant.constant import *
-from pathlib import Path
-
-from definitions import DATA_DIR
 
 
 class ExtractResultImport:
@@ -81,7 +74,6 @@ class ExtractResultImport:
         :return:
         """
         start_node_is_api = False
-        # 确认是不是API
         start_node = self.graph_data.find_one_node_by_property(property_name=CodeConstant.QUALIFIED_NAME,
                                                                property_value=start_name)
 
@@ -111,7 +103,7 @@ class ExtractResultImport:
                                      relationType=relation_name)
 
     @catch_exception
-    def add_sentence_relation(self, sentence, api, sentence_type,relation_name="has sentence"):
+    def add_sentence_relation(self, sentence, api, sentence_type, relation_name="has sentence"):
         """
         :param relation_name:关系名
         :param sentence: 句子
@@ -119,7 +111,7 @@ class ExtractResultImport:
         :return:
         """
         node_properties = {"added_in_version": self.added_in_version,
-                           SentenceConstant.PRIMARY_PROPERTY_NAME: sentence,"type":sentence_type}
+                           SentenceConstant.PRIMARY_PROPERTY_NAME: sentence, "type": sentence_type}
         sentence_node_id = self.graph_data.add_node(self.sentence_info_label, node_properties,
                                                     primary_property_name=SentenceConstant.PRIMARY_PROPERTY_NAME)
 

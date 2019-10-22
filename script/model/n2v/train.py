@@ -14,7 +14,6 @@ def train_node2vec(pro_name, version):
     graph_data_output_dir.mkdir(exist_ok=True, parents=True)
     node2vec_output_dir = graph_data_output_dir / "GraphEmbedding"
     node2vec_output_dir.mkdir(exist_ok=True, parents=True)
-    # train_weight_graph_data(graph_data_output_dir, node2vec_output_dir, pro_name, version)
     graph_random_walk_path = str(
         node2vec_output_dir / "{pro}.{version}.unweight.rwp".format(pro=pro_name, version=version))
     trainer = GraphNode2VecTrainer(GraphData.load(
@@ -43,7 +42,7 @@ def train_weight_graph_data(graph_data_output_dir, node2vec_output_dir, pro_name
 if __name__ == "__main__":
 
     pro_list = SUPPORT_PROJECT_LIST
-    versions = ["v3_1"]
+    versions = ["v3"]
     for version in versions:
         for pro_name in pro_list:
             train_node2vec(pro_name, version)

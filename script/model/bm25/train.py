@@ -12,8 +12,6 @@ from util.path_util import PathUtil
 
 @catch_exception
 def train_model(pro_name, version):
-    # pre_doc_collection_out_path = PathUtil.pre_doc(pro_name, version, pre_way="spacy-pre")
-    # document_collection_path = Path(DATA_DIR) / 'doc' / 'jdk8' / 'jdk8.v4.dc'
     document_collection_path = PathUtil.doc(pro_name, version)
     collection = MultiFieldDocumentCollection.load(str(document_collection_path))
     processor = Preprocessor()
@@ -25,7 +23,7 @@ def train_model(pro_name, version):
 
 if __name__ == '__main__':
     pro_list = SUPPORT_PROJECT_LIST
-    versions = ["v3_1"]
+    versions = ["v3"]
     for version in versions:
         for pro_name in pro_list:
             train_model(pro_name, version)

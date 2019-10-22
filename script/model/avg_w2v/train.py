@@ -17,7 +17,8 @@ def train_avg_w2v_model(pro_name, version):
     collection = MultiFieldDocumentCollection.load(str(doc_path))
     processor = CodeDocPreprocessor()
     pre_doc_collection = PreprocessMultiFieldDocumentCollection.create_from_doc_collection(processor, collection)
-
+    pre_doc_path = PathUtil.pre_doc(pro_name, version, pre_way="code-pre")
+    pre_doc_collection.save(pre_doc_path)
     word2vec_model_path = PathUtil.sim_model(pro_name=pro_name, version=version, model_type="avg_w2v")
     AVGW2VFLModel.train(model_dir_path=word2vec_model_path,
                         doc_collection=pre_doc_collection)

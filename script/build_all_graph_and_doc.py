@@ -58,7 +58,7 @@ def build_extra_model_and_doc(pro_name, version_list):
         preprocess_doc_collection: PreprocessMultiFieldDocumentCollection = PreprocessMultiFieldDocumentCollection.load(
             pre_doc_collection_path)
 
-        word2vec_model_path = PathUtil.sim_model(pro_name=pro_name, version="v3", model_type="avg_w2v")
+        word2vec_model_path = PathUtil.sim_model(pro_name=pro_name, version=version, model_type="avg_w2v")
         AVGW2VFLModel.train(model_dir_path=word2vec_model_path,
                             doc_collection=preprocess_doc_collection)
 
@@ -74,31 +74,6 @@ def build_jdk_all_graph_and_doc():
     for version in version_list:
         build_doc(pro_name, version)
         build_pre_doc(pro_name, version, CodeDocPreprocessor())
-
-
-@catch_exception
-def cache_wikidata_item_and_title_search(pro_name):
-    builder = CodeGraphBuilder()
-
-    print("start fetch for %r" % pro_name)
-    domain_dir = Path(PathUtil.domain_concept_dir(pro_name=pro_name, version="v1"))
-    terms = []
-    with (domain_dir / "terms.txt").open("r", encoding="utf-8") as f:
-        terms = {line.strip() for line in f}
-
-    generic_title_search_cache_path = PathUtil.generic_title_search_cache()
-    generic_wikidata_item_cache_path = PathUtil.generic_wikidata_item_cache()
-
-    project_title_search_cache_path = PathUtil.project_title_search_cache(pro_name)
-    project_wikidata_item_cache_path = PathUtil.project_wikidata_item_cache(pro_name)
-    builder.cache_wikidata_and_title_search_for_v3(pro_name=pro_name, terms=terms,
-                                                   project_wikidata_item_cache_path=project_wikidata_item_cache_path,
-                                                   project_title_search_cache_path=project_title_search_cache_path,
-                                                   generic_wikidata_item_cache_path=generic_wikidata_item_cache_path,
-                                                   generic_title_search_cache_path=generic_title_search_cache_path
-
-                                                   )
-
 
 if __name__ == "__main__":
     build_jdk_all_graph_and_doc()

@@ -1,17 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-import re
-from pathlib import Path
-
-import networkx as nx
-from sekg.graph.exporter.graph_data import GraphData
-
-from sekg.graph.exporter.weight_graph_data import WeightGraphData
 from sekg.ir.doc.wrapper import PreprocessMultiFieldDocumentCollection, MultiFieldDocumentCollection
-from sekg.ir.models.bm25 import BM25Model
 from sekg.ir.models.n2v.svm.filter_semantic_tfidf_n2v import FilterSemanticTFIDFNode2VectorModel
-from sekg.ir.models.tf_idf import TFIDFModel
 from sekg.ir.models.avg_w2v import AVGW2VFLModel
 from definitions import OUTPUT_DIR, DATA_DIR, SUPPORT_PROJECT_LIST
 from sekg.ir.preprocessor.base import Preprocessor
@@ -31,7 +21,6 @@ class SVMTrainer():
         self.pretrain_node2vec_path = PathUtil.node2vec(pro_name=pro_name, version=version, weight="unweight")
         self.kg_name_searcher_path = PathUtil.name_searcher(pro_name, version)
         self.doc_sim_model_path = PathUtil.sim_model(pro_name=pro_name, version=version, model_type="avg_w2v")
-        # self.doc_sim_model_path = PathUtil.sim_model(pro_name=pro_name, version=version, model_type="bm25")
 
     def train(self):
         self.model.train_from_doc_collection_with_preprocessor(self.doc_collection,
@@ -45,7 +34,7 @@ class SVMTrainer():
 
 if __name__ == '__main__':
     pro_list = SUPPORT_PROJECT_LIST
-    versions = ["v3_1"]
+    versions = ["v3"]
     for version in versions:
         for pro_name in pro_list:
             svm = SVMTrainer(pro_name, version)

@@ -10,7 +10,6 @@ Base = declarative_base()
 
 
 class APIRelation(Base):
-    ## todo: change to fix the sekg code constant
     RELATION_CATEGORY_BELONG_TO = 1
     RELATION_CATEGORY_EXTENDS = 2
     RELATION_CATEGORY_IMPLEMENTS = 3

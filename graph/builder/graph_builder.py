@@ -228,7 +228,6 @@ class CodeGraphBuilder:
                                          generic_title_search_cache_path,
                                          generic_wikidata_item_cache_path,
                                          fusion_temp_result_dir,
-                                         wikipedia_context_path,
                                          ):
         print("start adding wikidata knowledge for %s" % pro_name)
 
@@ -259,13 +258,4 @@ class CodeGraphBuilder:
         fusion.save(output_graph_data_path)
         print("end adding wikidata knowledge for %s" % pro_name)
 
-        print("train w2v model for new graph")
-        builder = GraphNodeDocumentBuilder(graph_data=fusion.graph_data)
-        doc_collection = builder.build_doc_for_kg()
-
-        preprocess_doc_collection = PreprocessMultiFieldDocumentCollection.create_from_doc_collection(
-            preprocessor=CodeDocPreprocessor(), doc_collection=doc_collection)
-
-        AVGW2VFLModel.train(model_dir_path=word2vec_model_path,
-                            doc_collection=preprocess_doc_collection)
         return fusion.graph_data

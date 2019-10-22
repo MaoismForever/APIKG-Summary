@@ -17,9 +17,6 @@ DATA_DIR = os.path.join(ROOT_DIR, 'data')
 OUTPUT_DIR = os.path.join(ROOT_DIR, 'output')
 WIKI_DIR = os.path.join(OUTPUT_DIR, 'wiki')
 
-# the benchmark dir
-BENCHMARK_DIR = os.path.join(ROOT_DIR, "benchmark")
-
 # extracte_data dir
 EXTRACTE_DATA_DIR = os.path.join(ROOT_DIR, "extracte_result")
 

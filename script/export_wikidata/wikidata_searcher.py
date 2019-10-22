@@ -6,10 +6,8 @@ fetch wikadata and wikipedia item with api
 
 import asyncio
 import pickle
-import time
 import traceback
 from pathlib import Path
-import os
 import aiohttp
 import async_timeout
 from sekg.util.url_util import URLUtil
@@ -203,8 +201,6 @@ class AsyncWikiSearcher:
         else:
             tasks = [self.__fetch_entity(_id) for _id in ids]
             loop.run_until_complete(asyncio.gather(*tasks))
-        # for k, v in self.item_cache:
-        #     self.item_cache[k] = WikiDataItem(k, init_at_once=False).init_wikidata_item_from_json(v)
         return self.item_cache
 
     def fetch_item_neighbor(self, ids=None):
