@@ -325,8 +325,9 @@ class GenericKGFusion:
         valid_wiki_id_set = self.graph_data.get_node_ids_by_label("wikidata")
         valid_wiki_index = np.array(list(self.w2v_model.preprocess_doc_collection.doc_id_set_2_doc_index_set(
             valid_wiki_id_set)))
-        doc_model = self.w2v_model.avg_w2v_model_field_map["doc"]
         print("valid_wiki_index size: ", valid_wiki_index.size)
+
+        doc_model = self.w2v_model.avg_w2v_model_field_map["doc"]
 
         for node_id in valid_domain_id_set:
             try:
@@ -343,14 +344,18 @@ class GenericKGFusion:
                 domain_words = self.w2v_model.preprocessor.clean(text)
                 domain_vec = self.w2v_model.get_avg_w2v_vec(domain_words)
                 score_vector = (doc_model.similar_by_vector(domain_vec, topn=None) + 1) / 2
-                over_thred = np.where(score_vector > 0.8)
-                top_wiki_valid = np.intersect1d(over_thred, valid_wiki_index)
-                if top_wiki_valid.size:
-                    print("number {}:{} ,Done!".format(i, node_id))
-                score_vector = score_vector[top_wiki_valid]
+
                 sort_index = np.argsort(-score_vector)
                 score_vector = score_vector[sort_index]
-                sorted_index_scores = np.array((sort_index, score_vector)).T
+
+                over_thred = np.where(score_vector > 0.8)
+                top_wiki_valid = np.intersect1d(over_thred, valid_wiki_index)
+
+                if top_wiki_valid.size:
+                    print("number {}:{} ,Done!".format(i, node_id))
+                # score_vector = score_vector[top_wiki_valid]
+
+                sorted_index_scores = np.array((top_wiki_valid, score_vector[top_wiki_valid])).T
                 retrieval_results = []
                 rank = 0
                 for (doc_index, score) in sorted_index_scores:
