@@ -7,7 +7,8 @@ from sekg.ir.preprocessor.code_text import CodeDocPreprocessor, PureCodePreproce
 from sekg.ir.preprocessor.spacy import SpacyTextPreprocessor
 from sekg.util.annotation import catch_exception
 from graph.builder.graph_builder import CodeGraphBuilder
-from script.name_searcher import train_name_searcher
+from script.graph_name_searcher.name_searcher import train_name_searcher
+
 from util.path_util import PathUtil
 from script.build_graph_data.v1_graph_data_builder import build_v1_jdk
 from script.build_graph_data.v2_graph_data_builder_add_sentence import build_v2_graph_for_pro

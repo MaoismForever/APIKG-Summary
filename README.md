@@ -3,7 +3,7 @@
 2. APISummary is a project of creating API summary when given specific query and class. We construct an API Knowledge Graph with api documentation and wikidata knowledge to minish the gap between different types of knowledge.
 3. The available experiment data is [here](https://fudanselab.github.io/Research-ESEC-FSE2019-APIKGSummary/), other data for model is [here]()
 
-## Requiment
+## Requirement
 1. sekg  (an integrated python package of our research)
 2. pyfasttext  
 3. gensim
