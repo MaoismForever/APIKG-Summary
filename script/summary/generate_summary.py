@@ -16,11 +16,9 @@ class Summary:
     sort_method_ids = []
     sort_sentence_ids = []
 
-    def __init__(self):
-        graph_data_path = PathUtil.graph_data(pro_name="jdk8", version="v4")
-        self.graph_data: GraphData = GraphData.load(graph_data_path)
-        model_dir = Path(OUTPUT_DIR) / "sim_models" / "jdk8" / "v4" / "svm"
-        self.model = self.create_search_model(model_dir)
+    def __init__(self, pro_name, version, model_dir):
+        graph_data_path = PathUtil.graph_data(pro_name=pro_name, version=version)
+        self.model = self.create_search_model(pro_name, version, model_dir)
         print("It's ok for init!")
 
     def get_sentence_from_class_or_method(self, id):
@@ -47,7 +45,7 @@ class Summary:
                     if method_id == class_id:
                         method_id = re[2]
                     node_dict = self.graph_data.get_node_info_dict(method_id)
-                    if "method" in node_dict["labels"] and "construct method" not in node_dict["labels"]:
+                    if ("method" in node_dict["labels"] or "base override method" in node_dict["labels"]) and "construct method" not in node_dict["labels"]:
                         method_id_list.append(method_id)
             return method_id_list
         except Exception as e:
@@ -112,19 +110,19 @@ class Summary:
         return class_or_method_2_sentence
 
     @staticmethod
-    def create_search_model(model_dir):
-        # sub_search_model_config_path = model_dir / "submodel.config"
-        # with open(sub_search_model_config_path, 'rb') as aq:
-        #     sub_search_model_config = pickle.loads(aq.read())
-        # model_1 = Path(ROOT_DIR) / "output" / "search_model" / "bm25"
-        # model_2 = Path(ROOT_DIR) / "output" / "search_model" / "avg_n2v"
-        # new_sub_search_model_config = [
-        #     (model_1, sub_search_model_config[0][1], sub_search_model_config[0][2], sub_search_model_config[0][3]),
-        #     (model_2, sub_search_model_config[1][1], sub_search_model_config[1][2], sub_search_model_config[1][3]),
-        # ]
-        # with open(sub_search_model_config_path, 'wb') as out:
-        #     out.write(pickle.dumps(new_sub_search_model_config))
-        model = FilterSemanticTFIDFNode2VectorModel.load(model_dir)
+    def create_search_model(pro_name, version, model_dir):
+        sub_search_model_config_path = model_dir / "submodel.config"
+        with open(sub_search_model_config_path, 'rb') as aq:
+            sub_search_model_config = pickle.loads(aq.read())
+        model_1 = PathUtil.sim_model(pro_name, version, "avg_w2v")
+        model_2 = PathUtil.sim_model(pro_name, version, "svm")
+        new_sub_search_model_config = [
+            (model_1, sub_search_model_config[0][1], sub_search_model_config[0][2], sub_search_model_config[0][3]),
+            (model_2, sub_search_model_config[1][1], sub_search_model_config[1][2], sub_search_model_config[1][3]),
+        ]
+        with open(sub_search_model_config_path, 'wb') as out:
+            out.write(pickle.dumps(new_sub_search_model_config))
+        model = CompoundSearchModel.load(model_dir)
         return model
 
     @staticmethod
@@ -142,19 +140,18 @@ class Summary:
         class_id_2_method_ids = {}
         class_and_method_ids = []
         method_and_sentence_ids = []
-        valid_class_ids = self.graph_data.get_node_ids_by_label("class")
+        valid_class_ids = self.graph_data.get_node_ids_by_label("class") - self.graph_data.get_node_ids_by_label(
+            "class type")
         sorted_class_ids = self.model.search(query, number, valid_class_ids)
         count_class = 0
         for sorted_class_id in sorted_class_ids:
             if count_class > number - 1:
                 break
             class_id = sorted_class_id.doc_id
-            if len(self.get_method_id_from_class(class_id)) > 1:
-                count_class += 1
-                class_and_method_ids.append(class_id)
-                class_id_2_method_ids[class_id] = self.get_method_id_from_class(class_id)
-                method_and_sentence_ids += class_id_2_method_ids[class_id]
-                class_and_method_ids += class_id_2_method_ids[class_id]
+            class_and_method_ids.append(class_id)
+            class_id_2_method_ids[class_id] = self.get_method_id_from_class(class_id)
+            method_and_sentence_ids += class_id_2_method_ids[class_id]
+            class_and_method_ids += class_id_2_method_ids[class_id]
         for class_or_method_id in class_and_method_ids:
             self.class_or_method_2_sentence_ids[class_or_method_id] = self.get_sentence_from_class_or_method(
                 class_or_method_id)
@@ -374,8 +371,8 @@ class Summary:
             sentence_num = len(sentence_rank_list)
         for num in range(sentence_num):
             sentence_name = \
-            self.graph_data.find_nodes_by_ids(class_or_method_sentence_dict_rank[sentence_rank_list[num]])[0][
-                'properties']['sentence_name']
+                self.graph_data.find_nodes_by_ids(class_or_method_sentence_dict_rank[sentence_rank_list[num]])[0][
+                    'properties']['sentence_name']
             class_or_method_2_sentence[class_or_method_name]['sentence'].append(sentence_name)
         return class_or_method_2_sentence
 
