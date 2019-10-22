@@ -1,6 +1,4 @@
 from flask import Flask, request, jsonify
-import sys
-sys.path.append('/home/fdse/lvgang/APIKGSummaryV1')
 from script.summary.generate_summary import Summary
 from flask_cors import CORS
 
