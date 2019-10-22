@@ -18,6 +18,7 @@ class Summary:
 
     def __init__(self, pro_name, version, model_dir):
         graph_data_path = PathUtil.graph_data(pro_name=pro_name, version=version)
+        self.graph_data:GraphData=GraphData.load(graph_data_path)
         self.model = self.create_search_model(pro_name, version, model_dir)
         print("It's ok for init!")
 
