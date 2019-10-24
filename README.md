@@ -1,7 +1,7 @@
 ## APISummary
 1. This is an official implementation of ["Generating Query-Specific Class API Summaries"](http://delivery.acm.org/10.1145/3340000/3338971/fse19main-id291-p.pdf?ip=202.120.235.96&id=3338971&acc=ACTIVE%20SERVICE&key=BF85BBA5741FDC6E%2E88014DC677A1F2C3%2E4D4702B0C3E38B35%2E4D4702B0C3E38B35&__acm__=1571655121_84ed7bca1423a0de5476d7125a940c42).  
-2. APISummary is a project of creating API summary when given specific query and class. We construct an API Knowledge Graph with api documentation and wikidata knowledge to minish the gap between different types of knowledge.
-3. The available experiment data is [here](https://fudanselab.github.io/Research-ESEC-FSE2019-APIKGSummary/), other data for model is [here](https://drive.google.com/open?id=17yUb_w6DHxxhH7JTa2CB4Guz7ue_Cpb3)
+2. APISummary is a project of creating API summary when given specific query and class. We construct an API Knowledge Graph with API documentation and wikidata knowledge to minish the gap between different types of knowledge.
+3. The data for model is [here](https://drive.google.com/open?id=17yUb_w6DHxxhH7JTa2CB4Guz7ue_Cpb3), containing the KG we built and the models used to support for API Class Summary.
 
 ## Requirement
 1. sekg  (an integrated python package of our research)
