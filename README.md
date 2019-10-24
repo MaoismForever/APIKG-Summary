@@ -1,7 +1,11 @@
-## APISummary
-1. This is an official implementation of ["Generating Query-Specific Class API Summaries"](http://delivery.acm.org/10.1145/3340000/3338971/fse19main-id291-p.pdf?ip=202.120.235.96&id=3338971&acc=ACTIVE%20SERVICE&key=BF85BBA5741FDC6E%2E88014DC677A1F2C3%2E4D4702B0C3E38B35%2E4D4702B0C3E38B35&__acm__=1571655121_84ed7bca1423a0de5476d7125a940c42).  
-2. APISummary is a project of creating API summary when given specific query and class. We construct an API Knowledge Graph with API documentation and wikidata knowledge to minish the gap between different types of knowledge.
-3. The data for model is [here](https://drive.google.com/open?id=17yUb_w6DHxxhH7JTa2CB4Guz7ue_Cpb3), containing the KG we built and the models used to support for API Class Summary.
+## APIKG-Summary
+
+APIKG-Summary is a project of creating API class summary when given specific query and class. We constructed an API Knowledge Graph with API documentation and wikidata knowledge support this. This is an implementation of ["Generating Query-Specific Class API Summaries"](http://delivery.acm.org/10.1145/3340000/3338971/fse19main-id291-p.pdf?ip=202.120.235.96&id=3338971&acc=ACTIVE%20SERVICE&key=BF85BBA5741FDC6E%2E88014DC677A1F2C3%2E4D4702B0C3E38B35%2E4D4702B0C3E38B35&__acm__=1571655121_84ed7bca1423a0de5476d7125a940c42). However, the code is not exactly the same as in the paper, because we tried to refactor and improve the code after that. Welcome any help for improvement!
+
+
+## Data
+
+The data for this project is [here](https://drive.google.com/open?id=17yUb_w6DHxxhH7JTa2CB4Guz7ue_Cpb3), containing the KG we built and the models used to support for API Class Summary.
 
 ## Requirement
 1. sekg  (an integrated python package of our research)
